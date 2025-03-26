@@ -1,0 +1,49 @@
+<?php
+
+namespace Database\Seeders;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Category;
+use App\Models\Post;
+use App\Models\Comment;
+use App\Models\Tag;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+
+        // Create user
+        $users = User::factory()->create();
+
+        // Create 10 categories
+        $categories = Category::factory(10)->create();
+
+        // Create 10 posts
+        $posts = Post::factory(10)
+            ->recycle($users)
+            ->recycle($categories)
+            ->create();
+
+        // Create comments for posts
+        $posts->each(function ($post) {
+            Comment::factory(rand(0, 5))
+                ->recycle($post->user)
+                ->create(['post_id' => $post->id]);
+        });
+
+        // Create tags and attach to posts
+        $tags = Tag::factory(20)->create();
+        
+        $posts->each(function ($post) use ($tags) {
+            $post->tags()->attach(
+                $tags->random(rand(1, 3))->pluck('id')->toArray()
+            );
+        });
+    }
+}
