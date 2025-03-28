@@ -17,7 +17,7 @@
                         </a>
                         <span class="text-gray-400">{{ $post->created_at->diffForHumans() }}</span>
                         <h3 class="text-lg font-semibold"><a href="{{ route('posts.show', $post ) }}" class="hover:underline">{{ $post->title }}</a></h3>
-                        <p class="text-gray-600">{{ substr($post->content, 0, 50) }}</p>
+                        <p class="text-gray-600">{{ $post->excerpt }}</p>
                     </div>
                 </article>
             @endforeach

@@ -8,12 +8,20 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Tag;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
     use HasFactory;
 
     protected $fillable = ['title', 'content', 'featured_image', 'category_id', 'user_id', 'slug'];
+
+    public function getExcerptAttribute()
+    {
+        $html = Str::markdown($this->content);
+        $plainText = strip_tags($html);
+        return Str::limit($plainText, 150);
+    }
 
     public function user()
     {
