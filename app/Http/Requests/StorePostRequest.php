@@ -28,4 +28,16 @@ class StorePostRequest extends FormRequest
             'featured_image' => 'nullable|image|mimes:jpeg,png,webp,jpg,gif,svg|max:2048',
         ];
     }
+
+    /**
+ * Get custom messages for validator errors.
+ *
+ * @return array<string, string>
+ */
+public function messages()
+{
+    return [
+        'featured_image.max' => 'The featured image must not be larger than 2MB.',
+    ];
+}
 }

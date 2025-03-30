@@ -9,7 +9,7 @@
             @foreach ($posts as $post)
                 <article class="flex gap-4 border-b pb-4">
                     @if ( $post->featured_image ) 
-                        <img src="{{ asset('storage/' . $post->featured_image ) }}" alt="Post Image" class="w-32 h-32 object-cover rounded">
+                        <img src="{{ asset('storage/' . str_replace('-featured.jpg', '-thumb.jpg', $post->featured_image)) }}" alt="Post Image" class="w-32 h-32 object-cover rounded">
                     @endif
                     <div>
                         <a href="/?category_id={{ $post->category->id }}">
