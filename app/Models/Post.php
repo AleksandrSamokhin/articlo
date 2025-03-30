@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Tag;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Post extends Model
 {
@@ -16,11 +17,18 @@ class Post extends Model
 
     protected $fillable = ['title', 'content', 'featured_image', 'category_id', 'user_id', 'slug'];
 
-    public function getExcerptAttribute()
+    public function excerpt(): Attribute
     {
-        $html = Str::markdown($this->content);
-        $plainText = strip_tags($html);
-        return Str::limit($plainText, 150);
+        return Attribute::make(
+            get: fn () => Str::limit(strip_tags(Str::markdown($this->content)), 150)
+        );
+    }
+
+    protected function thumb(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->featured_image ? 'storage/' . str_replace('-featured', '-thumb', $this->featured_image) : null,
+        );
     }
 
     public function user()

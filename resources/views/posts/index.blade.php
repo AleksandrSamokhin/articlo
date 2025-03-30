@@ -40,8 +40,8 @@
 												@foreach($posts as $post)
 													<tr>
 														<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-															@if($post->featured_image)
-																<img src="{{ asset('storage/' . str_replace('-featured', '-thumb', $post->featured_image)) }}" alt="{{ $post->title }}" width="64" height="64" class="h-10 w-10 rounded-full">
+															@if($post->thumb)
+																<img src="{{ asset($post->thumb) }}" alt="{{ $post->title }}" width="64" height="64" class="h-10 w-10 rounded-full">
 															@endif
 														</td>
 														<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
