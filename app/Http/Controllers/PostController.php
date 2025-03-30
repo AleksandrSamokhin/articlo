@@ -7,8 +7,9 @@ use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-
 use App\Http\Requests\StorePostRequest;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class PostController extends Controller
 {
@@ -50,11 +51,34 @@ class PostController extends Controller
         
         $validatedData['slug'] = $slug;
 
-        // Handle image upload if present
+        // Handle image upload with nested folder structure
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('posts');
-            $validatedData['featured_image'] = $path;
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($request->file('featured_image'));
+            
+            // Get original extension
+            $extension = $request->file('featured_image')->getClientOriginalExtension();
+            
+            // Generate featured image (1170px wide, maintaining aspect ratio)
+            $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
+            $featuredPath = 'posts/' . $slug . '/' . $slug . '-featured.' . $extension;
+            Storage::disk('public')->put($featuredPath, $featuredData);
+            
+            // Generate thumbnail (128x128)
+            $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
+            $thumbnailPath = 'posts/' . $slug . '/' . $slug . '-thumb.' . $extension;
+            Storage::disk('public')->put($thumbnailPath, $thumbnailData);           
+            
+            // Store the featured image path in the database
+            $validatedData['featured_image'] = $featuredPath;
         }
+
+
+        // Default image upload
+        // if ($request->hasFile('featured_image')) {
+        //     $path = $request->file('featured_image')->store('posts');
+        //     $validatedData['featured_image'] = $path;
+        // }
 
         Post::create($validatedData);
 
@@ -99,13 +123,38 @@ class PostController extends Controller
 
         // Handle image upload if present
         if ($request->hasFile('featured_image')) {
-            // Delete old image if exists
+            // Delete old images if they exist
             if ($post->featured_image) {
-                Storage::delete('posts/' . $post->featured_image);
+                // Get the extension from the current featured image path
+                $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
+                
+                // Delete both featured and thumbnail images
+                Storage::disk('public')->delete($post->featured_image);
+                Storage::disk('public')->delete(str_replace('-featured.' . $extension, '-thumb.' . $extension, $post->featured_image));
+                
+                // Delete the old folder
+                Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
             }
             
-            $path = $request->file('featured_image')->store('posts');
-            $validatedData['featured_image'] = $path;
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($request->file('featured_image'));
+
+            // Use the new slug if title changed, otherwise use the current post's slug
+            $currentSlug = $validatedData['slug'] ?? $post->slug;
+
+            $extension = $request->file('featured_image')->getClientOriginalExtension();
+
+            // Generate featured image (1170px wide, maintaining aspect ratio)
+            $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
+            $featuredPath = 'posts/' . $currentSlug . '/' . $currentSlug . '-featured.' . $extension;
+            Storage::disk('public')->put($featuredPath, $featuredData);
+            
+            // Generate thumbnail (128x128)
+            $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
+            $thumbnailPath = 'posts/' . $currentSlug . '/' . $currentSlug . '-thumb.' . $extension;
+            Storage::disk('public')->put($thumbnailPath, $thumbnailData);
+            
+            $validatedData['featured_image'] = $featuredPath;
         }
 
         $post->update($validatedData);
@@ -115,6 +164,19 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        // Delete old images if they exist
+        if ($post->featured_image) {
+            // Get the extension from the current featured image path
+            $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
+            
+            // Delete both featured and thumbnail images
+            Storage::disk('public')->delete($post->featured_image);
+            Storage::disk('public')->delete(str_replace('-featured.' . $extension, '-thumb.' . $extension, $post->featured_image));
+            
+            // Delete the folder
+            Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
+        }
+
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
