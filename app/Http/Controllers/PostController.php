@@ -19,6 +19,13 @@ class PostController extends Controller
         return 'slug';
     }
 
+    public function search($term)
+    {
+        $posts = Post::search($term)->get();
+        return $posts;
+        // return view('posts.search', compact('posts'));
+    }
+
     public function index()
     {
         $posts = Post::with('category')->latest()->paginate(10);

@@ -22,18 +22,26 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <a href="{{ route('home') }}" class="text-2xl font-bold text-gray-800">{{ config('app.name') }}</a>
-                <nav>
-                    <ul class="flex space-x-6">
-                        <li><a href="{{ route('home') }}" class="text-gray-600 hover:text-gray-800">Home</a></li>
-                        <li><a href="{{ route('about') }}" class="text-gray-600 hover:text-gray-800">About Us</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-gray-600 hover:text-gray-800">Contact</a></li>
-                        @auth
-                            <li><a href="{{ route('dashboard') }}" class="p-2 rounded-md border border-gray-200 text-gray-600 hover:text-gray-800">Dashboard</a></li>
-                        @else
-                            <li><a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-800">Login</a></li>
-                        @endauth
-                    </ul>
-                </nav>
+
+
+                <div class="flex items-center space-x-4">
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li><a href="{{ route('home') }}" class="text-gray-600 hover:text-gray-800">Home</a></li>
+                            <li><a href="{{ route('about') }}" class="text-gray-600 hover:text-gray-800">About Us</a></li>
+                            <li><a href="{{ route('contact') }}" class="text-gray-600 hover:text-gray-800">Contact</a></li>
+    
+                            @auth
+                                <li><a href="{{ route('dashboard') }}" class="p-2 rounded-md border border-gray-200 text-gray-600 hover:text-gray-800">Dashboard</a></li>
+                            @else
+                                <li><a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-800">Login</a></li>
+                            @endauth
+                        </ul>
+                    </nav>
+    
+                    <livewire:search />
+                </div>
+
             </div>
         </div>
     </header>

@@ -10,12 +10,21 @@ use App\Models\Comment;
 use App\Models\Tag;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Laravel\Scout\Searchable;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = ['title', 'content', 'featured_image', 'category_id', 'user_id', 'slug'];
+
+    public function toSearchableArray()
+    {
+        return [
+            'title' => $this->title,
+            'content' => strip_tags($this->content),
+        ];
+    }
 
     public function excerpt(): Attribute
     {
