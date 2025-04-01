@@ -5,6 +5,8 @@
         </svg>
     </button>
 
+
+
     <!-- Search Overlay -->
     <div 
         x-show="isOpen" 
@@ -35,7 +37,7 @@
 
                 <!-- Search Header -->
                 <div class="mb-6">
-                    <h3 class="text-xl font-semibold text-gray-900">Search Posts</h3>
+                    <h2 class="text-xl font-semibold text-gray-900">Search Posts</h2>
                 </div>
 
                 <!-- Search Input -->
@@ -48,7 +50,7 @@
                     <input
                         x-ref="searchInput"
                         x-init="$watch('isOpen', value => { if(value) { $nextTick(() => $refs.searchInput.focus()) } })"
-                        wire:model.live.debounce.250ms="searchTerm"
+                        wire:model.live.debounce.250ms="search"
                         type="text"
                         placeholder="Search posts..."
                         class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -58,35 +60,34 @@
                 <!-- Search Results -->
                 <div class="overflow-y-auto max-h-96">
 
-                    @if (count($results) > 0)
+                    @if (count($this->results) > 0)
 
-                        <div class="space-y-3">
-                            @foreach ($results as $post)
-                                <div class="p-3 border rounded-lg hover:bg-gray-50 transition">
-                                    <h5 class="text-lg font-medium">
+                        <ul class="space-y-3">
+                            @foreach ($this->results as $post)
+                                <li wire:key="{{ $post->id }}" class="p-3 border rounded-lg hover:bg-gray-50 transition">
+                                    <h3 class="text-lg font-medium">
                                         <a 
                                             href="{{ route('posts.show', $post) }}" 
                                             class="text-blue-600 hover:text-blue-800"
-                                            wire:click="toggleSearchOverlay"
                                         >
                                             {{ $post->title }}
                                         </a>
-                                    </h5>
+                                    </h3>
                                     
                                     <div class="mt-1 text-xs text-gray-500">
                                         By {{ $post->user->name ?? 'Unknown' }} • {{ $post->created_at->diffForHumans() }}
                                     </div>
-                                </div>
+                                </li>
                             @endforeach
-                        </div>
+                        </ul>
 
                         <!-- Pagination -->
                         <div class="mt-4">
-                            {{ $results->links() }}
+                            {{ $this->results->links() }}
                         </div>
 
-                    @elseif (strlen($searchTerm) > 0)
-                        <p class="text-gray-600 text-center">No results found for "{{ $searchTerm }}"</p>
+                    @elseif (strlen($search) > 0)
+                        <p class="text-gray-600 text-center">No results found for "{{ $search }}"</p>
                     @endif                    
 
                 </div>
