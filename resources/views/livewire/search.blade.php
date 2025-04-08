@@ -5,8 +5,6 @@
         </svg>
     </button>
 
-
-
     <!-- Search Overlay -->
     <div 
         x-show="isOpen" 

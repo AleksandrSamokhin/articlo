@@ -16,7 +16,7 @@
 												</div>
 										@endif
 
-										<x-primary-button tag="a" href="{{ route('posts.create') }}">Add new post</x-primary-button>
+										<x-primary-button tag="a" href="{{ route('dashboard.posts.create') }}">Add new post</x-primary-button>
 					
                     <br /><br />
 										<table class="w-full min-w-full divide-y divide-gray-200">
@@ -50,13 +50,19 @@
 														<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
 															{{ $post->category->name }}
 														</td>
+														
 														<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-															<a href="{{ route('posts.edit', $post) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-															<form method="POST" action="{{ route('posts.destroy', $post) }}" class="inline-block">
-																@csrf
-																@method('DELETE')
-																<button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-900 ml-2">Delete</button>
-															</form>
+															@can('update', $post)
+																<a href="{{ route('dashboard.posts.edit', $post) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+															@endcan
+
+															@can('delete', $post)
+																<form method="POST" action="{{ route('dashboard.posts.destroy', $post) }}" class="inline-block">
+																	@csrf
+																	@method('DELETE')
+																	<button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-900 ml-2">Delete</button>
+																</form>
+															@endcan
 														</td>
 													</tr>
 												@endforeach

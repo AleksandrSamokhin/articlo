@@ -5,21 +5,9 @@
     <!-- Blog Posts Section -->
     <section class="w-3/4 bg-white p-6 shadow-md rounded-lg">
         <h2 class="text-xl font-semibold mb-4">Latest Posts</h2>
-        <div class="space-y-6">
+        <div class="space-y-6 mb-4">
             @foreach ($posts as $post)
-                <article class="flex gap-4 border-b pb-4">
-                    @if ( $post->thumb )
-                        <img src="{{ asset($post->thumb) }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded">
-                    @endif
-                    <div>
-                        <a href="/?category_id={{ $post->category->id }}">
-                            <span>{{ $post->category->name }}</span>
-                        </a>
-                        <span class="text-gray-400">{{ $post->created_at->diffForHumans() }}</span>
-                        <h3 class="text-lg font-semibold"><a href="{{ route('posts.show', $post ) }}" class="hover:underline">{{ $post->title }}</a></h3>
-                        <p class="text-gray-600">{{ $post->excerpt }}</p>
-                    </div>
-                </article>
+                <x-posts.post-card :post="$post" />
             @endforeach
         </div>
 
