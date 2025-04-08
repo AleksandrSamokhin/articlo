@@ -7,6 +7,9 @@
     
     <title>{{ config('app.name', 'Laravel') . ' - Blog' }}</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+
+
     <!-- Meta tags -->
     @yield('meta')
     

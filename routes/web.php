@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\IsAdminMiddleware;
 
 use App\Http\Controllers\HomeController;
 
@@ -21,10 +22,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
         return view('dashboard');
-    })->middleware(['verified'])->name('dashboard');
+    })->middleware(['verified', IsAdminMiddleware::class])->name('dashboard');
 
     Route::prefix('dashboard')
         ->name('dashboard.')
+        ->middleware(IsAdminMiddleware::class) 
         ->group(function() {
             Route::resource('posts', Dashboard\PostController::class);
         });

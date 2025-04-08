@@ -97,7 +97,7 @@ class PostController extends Controller
     {
         // Check if the user is authorized to update the post
         if (auth()->user()->cannot('update', $post)) {
-            return redirect()->route('posts.index')->with('error', 'You are not authorized to update this post');
+            abort(403);
         };
 
         $validatedData = $request->validated();
@@ -161,7 +161,7 @@ class PostController extends Controller
     {
         // Check if the user is authorized to delete the post
         if (auth()->user()->cannot('delete', $post)) {
-            return redirect()->route('dashboard.posts.index')->with('error', 'You are not authorized to delete this post');
+            abort(403);
         };
 
         // Delete old images if they exist

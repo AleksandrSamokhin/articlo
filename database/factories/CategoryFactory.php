@@ -17,10 +17,11 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->word();
+        $name = ['Marketing', 'Business', 'Technology', 'Health', 'Travel'];
+        $randomName = fake()->unique()->randomElement($name);
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
+            'name' => $randomName,
+            'slug' => Str::slug($randomName),
         ];
     }
 }

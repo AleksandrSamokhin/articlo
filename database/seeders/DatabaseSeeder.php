@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
         $users = User::factory()->create();
 
         // Create 10 categories
-        $categories = Category::factory(10)->create();
+        $categories = Category::factory(5)->create();
 
         // Create 10 posts
-        $posts = Post::factory(10)
+        $posts = Post::factory(7)
             ->recycle($users)
             ->recycle($categories)
             ->create();

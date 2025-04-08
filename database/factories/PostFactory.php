@@ -21,15 +21,26 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
+        $titles = [
+            'The Future of Technology',
+            'Health and Wellness Tips',
+            'The Rise of Biophilic Design: Bringing Nature Indoors',
+            'Marketing Strategies for 2023',
+            'Smart Homes 2.0: The Future of Residential Architecture',
+            'The Impact of AI on Society',
+            '5 Sustainable Materials Reshaping Modern Architecture'
+        ];
+        $title = fake()->unique()->randomElement($titles);
+
         return [
             'user_id' => User::factory(),
             'category_id' => Category::factory(),
-            'title' => fake()->sentence(),
-            'slug' => Str::slug(fake()->sentence()),
+            'title' => $title,
+            'slug' => Str::slug($title),
             'content' => fake()->paragraphs(3, true),
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-1 year', 'now'),
-            'featured_image' => fake()->optional()->imageUrl()
+            'featured_image' => 'posts/post_' . fake()->numberBetween(1, 7) . '.webp'
         ];
     }
 }
