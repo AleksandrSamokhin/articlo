@@ -3,7 +3,7 @@
 				<img src="{{ asset($post->thumb) }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded">
 		@endif
 		<div>
-				<a href="/?category_id={{ $post->category->id }}">
+				<a href={{ route('categories.show', $post->category) }}>
 						<span>{{ $post->category->name }}</span>
 				</a>
 				<span class="text-gray-400">{{ $post->created_at->diffForHumans() }}</span>

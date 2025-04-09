@@ -5,25 +5,12 @@
 
     <!-- Posts -->
     <section class="w-3/4 bg-white p-6 shadow-md rounded-lg">
-
-        <!-- Featured -->
-        @if ($featuredPosts->isNotEmpty())
-            <div>
-                <h2 class="text-xl font-semibold mb-4">Featured Posts</h2>
-                <div class="space-y-6 mb-4">
-                    @foreach ($featuredPosts as $post)
-                        <x-posts.post-card :post="$post" />
-                    @endforeach
-                </div>
-            </div>
-        @endif
         
         @if ($posts->isNotEmpty())
-            <!-- Latest -->
             <div>
-                <h2 class="text-xl font-semibold mb-4">Latest Posts</h2>
+                <h1 class="text-xl font-semibold mb-4">Posts in {{ $category->name }}</h1>
                 <div class="space-y-6 mb-4">
-                    @foreach ($posts as $post)
+                    @forelse ($posts as $post)
                         <x-posts.post-card :post="$post" />
                     @endforeach
                 </div>
@@ -35,10 +22,9 @@
                 <p class="text-gray-500">No posts available.</p>
             </div>
         @endif
-
     </section>
 
-    <x-sidebar :categories="$categories" />
+		<x-sidebar :categories="$categories" />
 
 </main>
 @endsection
