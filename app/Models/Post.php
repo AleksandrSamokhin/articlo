@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Comment;
@@ -17,6 +18,16 @@ class Post extends Model
     use HasFactory, Searchable;
 
     protected $fillable = ['title', 'content', 'featured_image', 'category_id', 'user_id', 'slug'];
+
+    /**
+     * Scope a query to filter by category when provided.
+     */
+    public function scopeByCategory(Builder $query): Builder
+    {
+        return $query->when(request('category_id'), function ($query) {
+            $query->where('category_id', request('category_id'));
+        });
+    }
 
     public function toSearchableArray()
     {

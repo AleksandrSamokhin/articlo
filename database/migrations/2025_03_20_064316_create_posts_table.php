@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('content');
             $table->string('featured_image')->nullable();
+            $table->boolean('is_featured')->default(false);
             $table->timestamps();
         });
     }

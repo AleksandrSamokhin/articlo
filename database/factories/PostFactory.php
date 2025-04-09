@@ -40,6 +40,7 @@ class PostFactory extends Factory
             'content' => fake()->paragraphs(3, true),
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'is_featured' => fake()->randomElement([true, false]),
             'featured_image' => 'posts/post_' . fake()->numberBetween(1, 7) . '.webp'
         ];
     }
