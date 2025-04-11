@@ -52,18 +52,20 @@ class PostController extends Controller
             $manager = new ImageManager(new Driver());
             $image = $manager->read($request->file('featured_image'));
             
-            // Get original extension
+            // Get original extension and filename
             $extension = $request->file('featured_image')->getClientOriginalExtension();
+            $filename = $request->file('featured_image')->getClientOriginalName();
             
             // Generate featured image (1170px wide, maintaining aspect ratio)
             $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
             $featuredPath = 'posts/' . $slug . '/' . $slug . '-featured.' . $extension;
-            Storage::disk('public')->put($featuredPath, $featuredData);
+
+            Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
             
             // Generate thumbnail (128x128)
             $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
             $thumbnailPath = 'posts/' . $slug . '/' . $slug . '-thumb.' . $extension;
-            Storage::disk('public')->put($thumbnailPath, $thumbnailData);           
+            Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);           
             
             // Store the featured image path in the database
             $validatedData['featured_image'] = $featuredPath;
@@ -124,11 +126,11 @@ class PostController extends Controller
                 $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
                 
                 // Delete both featured and thumbnail images
-                Storage::disk('public')->delete($post->featured_image);
-                Storage::disk('public')->delete(str_replace('-featured.' . $extension, '-thumb.' . $extension, $post->featured_image));
+                Storage::disk('s3')->delete($post->featured_image);
+                Storage::disk('s3')->delete(str_replace('-featured.' . $extension, '-thumb.' . $extension, $post->featured_image));
                 
                 // Delete the old folder
-                Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
+                // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
             }
             
             $manager = new ImageManager(new Driver());
@@ -138,16 +140,17 @@ class PostController extends Controller
             $currentSlug = $validatedData['slug'] ?? $post->slug;
 
             $extension = $request->file('featured_image')->getClientOriginalExtension();
+            $filename = $request->file('featured_image')->getClientOriginalName();
 
             // Generate featured image (1170px wide, maintaining aspect ratio)
             $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
             $featuredPath = 'posts/' . $currentSlug . '/' . $currentSlug . '-featured.' . $extension;
-            Storage::disk('public')->put($featuredPath, $featuredData);
+            Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
             
             // Generate thumbnail (128x128)
             $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
             $thumbnailPath = 'posts/' . $currentSlug . '/' . $currentSlug . '-thumb.' . $extension;
-            Storage::disk('public')->put($thumbnailPath, $thumbnailData);
+            Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);
             
             $validatedData['featured_image'] = $featuredPath;
         }
@@ -170,11 +173,11 @@ class PostController extends Controller
             $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
             
             // Delete both featured and thumbnail images
-            Storage::disk('public')->delete($post->featured_image);
-            Storage::disk('public')->delete(str_replace('-featured.' . $extension, '-thumb.' . $extension, $post->featured_image));
+            Storage::disk('s3')->delete($post->featured_image);
+            Storage::disk('s3')->delete(str_replace('-featured.' . $extension, '-thumb.' . $extension, $post->featured_image));
             
             // Delete the folder
-            Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
+            // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
         }
 
         $post->delete();

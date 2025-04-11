@@ -47,7 +47,7 @@ class Post extends Model
     protected function thumb(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->featured_image ? 'storage/' . str_replace('-featured', '-thumb', $this->featured_image) : null,
+            get: fn () => $this->featured_image ? str_replace('-featured', '-thumb', $this->featured_image) : null,
         );
     }
 
