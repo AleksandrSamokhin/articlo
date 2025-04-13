@@ -3,12 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Category;
-use App\Models\Post;
 use App\Models\Comment;
+use App\Models\Post;
 use App\Models\Tag;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
 
         // Create tags and attach to posts
         $tags = Tag::factory(20)->create();
-        
+
         $posts->each(function ($post) use ($tags) {
             $post->tags()->attach(
                 $tags->random(rand(1, 3))->pluck('id')->toArray()

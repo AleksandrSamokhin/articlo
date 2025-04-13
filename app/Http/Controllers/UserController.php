@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function loginApi(Request $request) {
+    public function loginApi(Request $request)
+    {
         $incomingFields = $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -16,6 +17,7 @@ class UserController extends Controller
         if (auth()->attempt($incomingFields)) {
             $user = User::where('email', $incomingFields['email'])->first();
             $token = $user->createToken('ourapptoken')->plainTextToken;
+
             return $token;
         }
 

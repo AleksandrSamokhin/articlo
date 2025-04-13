@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use App\Models\User;
-use App\Models\Category;
-use App\Models\Comment;
-use App\Models\Tag;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Laravel\Scout\Searchable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Post extends Model
+class Post extends Model implements HasMedia
 {
     use HasFactory, Searchable;
+    use InteractsWithMedia;
 
     protected $fillable = ['title', 'content', 'featured_image', 'category_id', 'user_id', 'slug'];
 
@@ -40,7 +40,7 @@ class Post extends Model
     public function excerpt(): Attribute
     {
         return Attribute::make(
-            get: fn () => Str::limit(strip_tags(Str::markdown($this->content)), 150)
+            get: fn () => Str::limit(strip_tags(Str::markdown($this->content)), 100)
         );
     }
 
@@ -69,5 +69,22 @@ class Post extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'post_tag');
+    }
+
+    /**
+     * Register the conversions that should be performed.
+     *
+     * @return array
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('thumb-1170')
+            ->width(1170);
+
+        $this
+            ->addMediaConversion('thumb-128')
+            ->width(128)
+            ->height(128);
     }
 }

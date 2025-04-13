@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+
 use function Pest\Laravel\actingAs;
 
 it('allows only administrator users to access dashboard page', function () {

@@ -1,6 +1,7 @@
-<article class="flex gap-4 border-b pb-4">
+<article>
 		@if ( $post->thumb )
-				<img src="{{ Storage::disk('s3')->url($post->thumb) }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded">
+				<img src="{{ $post->getFirstMediaUrl('posts', 'thumb') }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded">
+				{{-- <img src="{{ Storage::disk('s3')->temporaryUrl($post->thumb, now()->addMinutes(2)) }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded"> --}}
 		@endif
 		<div>
 				<a href={{ route('categories.show', $post->category) }}>

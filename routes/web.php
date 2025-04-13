@@ -1,19 +1,17 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\IsAdminMiddleware;
-
-use App\Http\Controllers\HomeController;
-
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Dashboard;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UploadController;
+use App\Http\Middleware\IsAdminMiddleware;
+use Illuminate\Support\Facades\Route;
 
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
 
 Route::middleware('auth')->group(function () {
 
@@ -27,8 +25,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('dashboard')
         ->name('dashboard.')
-        ->middleware(IsAdminMiddleware::class) 
-        ->group(function() {
+        ->middleware(IsAdminMiddleware::class)
+        ->group(function () {
             Route::resource('posts', Dashboard\PostController::class);
         });
 
@@ -39,5 +37,7 @@ Route::get('posts/{post:slug}', [PostController::class, 'show'])->name('posts.sh
 Route::get('search/{term}', [PostController::class, 'search'])->name('posts.search');
 
 Route::get('categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
+
+Route::post('upload', [UploadController::class, 'store']);
 
 require __DIR__.'/auth.php';

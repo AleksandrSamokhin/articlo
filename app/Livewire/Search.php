@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\Post;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Post;
 
 class Search extends Component
 {
@@ -26,7 +26,7 @@ class Search extends Component
     {
         $results = [];
 
-        if ( strlen($this->search) > 0 ) {
+        if (strlen($this->search) > 0) {
             $results = Post::search($this->search)->paginate(10);
         }
 

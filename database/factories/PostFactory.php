@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
 use App\Models\Category;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
  */
@@ -28,7 +29,7 @@ class PostFactory extends Factory
             'Marketing Strategies for 2023',
             'Smart Homes 2.0: The Future of Residential Architecture',
             'The Impact of AI on Society',
-            '5 Sustainable Materials Reshaping Modern Architecture'
+            '5 Sustainable Materials Reshaping Modern Architecture',
         ];
         $title = fake()->unique()->randomElement($titles);
 
@@ -41,7 +42,7 @@ class PostFactory extends Factory
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'is_featured' => fake()->randomElement([true, false]),
-            'featured_image' => 'posts/post_' . fake()->numberBetween(1, 7) . '.webp'
+            'featured_image' => 'posts/post_'.fake()->numberBetween(1, 7).'.webp',
         ];
     }
 }

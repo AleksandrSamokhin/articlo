@@ -19,6 +19,7 @@ class CategoryFactory extends Factory
     {
         $name = ['Marketing', 'Business', 'Technology', 'Health', 'Travel'];
         $randomName = fake()->unique()->randomElement($name);
+
         return [
             'name' => $randomName,
             'slug' => Str::slug($randomName),
