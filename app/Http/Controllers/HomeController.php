@@ -11,13 +11,13 @@ class HomeController extends Controller
     {
         $categories = Category::all();
 
-        $posts = Post::with(['category', 'media'])
+        $posts = Post::with('media')
             ->where('is_featured', false)
             ->byCategory()
             ->latest()
             ->paginate(5);
 
-        $featuredPosts = Post::with(['category', 'media'])
+        $featuredPosts = Post::with('media')
             ->where('is_featured', true)
             ->byCategory()
             ->latest()
