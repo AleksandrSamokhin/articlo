@@ -56,11 +56,11 @@ class PostController extends Controller
             $post = Post::create($validatedData);
 
             $post
-                ->addMedia(storage_path('app/public/posts/tmp/' . $request->featured_image . '/' . $temporaryFile->filename))
+                ->addMedia(storage_path('app/public/posts/tmp/'.$request->featured_image.'/'.$temporaryFile->filename))
                 ->toMediaCollection('posts', 'posts');
 
             // Delete the temporary file record
-            rmdir(storage_path('app/public/posts/tmp/' . $request->featured_image));
+            rmdir(storage_path('app/public/posts/tmp/'.$request->featured_image));
             $temporaryFile->delete();
 
         } else {
