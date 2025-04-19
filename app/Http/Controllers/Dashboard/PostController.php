@@ -49,49 +49,49 @@ class PostController extends Controller
         $validatedData['slug'] = $slug;
 
         $temporaryFile = TemporaryFile::where('folder', $request->featured_image)->first();
+
         if ($temporaryFile) {
 
             // Spatie Media Library
             $post = Post::create($validatedData);
-            // $post
-            //     ->addMediaFromRequest('featured_image')
-            //     ->toMediaCollection('posts');
 
             $post
-                ->addMedia(storage_path('app/public/posts/tmp/'.$request->featured_image.'/'.$temporaryFile->filename))
+                ->addMedia(storage_path('app/public/posts/tmp/' . $request->featured_image . '/' . $temporaryFile->filename))
                 ->toMediaCollection('posts');
 
             // Delete the temporary file record
-            rmdir(storage_path('app/public/posts/tmp/'.$request->featured_image));
+            rmdir(storage_path('app/public/posts/tmp/' . $request->featured_image));
             $temporaryFile->delete();
 
+        } else {
+            $post = Post::create($validatedData);
         }
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post created successfully');
 
-        // Handle image upload with nested folder structure
-        if ($request->hasFile('featured_image')) {
-            $manager = new ImageManager(new Driver);
-            $image = $manager->read($request->file('featured_image'));
+        // Handle image upload with nested folder structure (Intervention Image)
+        // if ($request->hasFile('featured_image')) {
+        //     $manager = new ImageManager(new Driver);
+        //     $image = $manager->read($request->file('featured_image'));
 
-            // Get original extension and filename
-            $extension = $request->file('featured_image')->getClientOriginalExtension();
-            $filename = $request->file('featured_image')->getClientOriginalName();
+        //     // Get original extension and filename
+        //     $extension = $request->file('featured_image')->getClientOriginalExtension();
+        //     $filename = $request->file('featured_image')->getClientOriginalName();
 
-            // Generate featured image (1170px wide, maintaining aspect ratio)
-            $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
-            $featuredPath = 'posts/'.$slug.'/'.$slug.'-featured.'.$extension;
+        //     // Generate featured image (1170px wide, maintaining aspect ratio)
+        //     $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
+        //     $featuredPath = 'posts/'.$slug.'/'.$slug.'-featured.'.$extension;
 
-            Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
+        //     Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
 
-            // Generate thumbnail (128x128)
-            $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
-            $thumbnailPath = 'posts/'.$slug.'/'.$slug.'-thumb.'.$extension;
-            Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);
+        //     // Generate thumbnail (128x128)
+        //     $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
+        //     $thumbnailPath = 'posts/'.$slug.'/'.$slug.'-thumb.'.$extension;
+        //     Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);
 
-            // Store the featured image path in the database
-            $validatedData['featured_image'] = $featuredPath;
-        }
+        //     // Store the featured image path in the database
+        //     $validatedData['featured_image'] = $featuredPath;
+        // }
 
         // Default image upload
         // if ($request->hasFile('featured_image')) {
@@ -99,9 +99,9 @@ class PostController extends Controller
         //     $validatedData['featured_image'] = $path;
         // }
 
-        Post::create($validatedData);
+        // Post::create($validatedData);
 
-        return redirect()->route('dashboard.posts.index')->with('success', 'Post created successfully');
+        // return redirect()->route('dashboard.posts.index')->with('success', 'Post created successfully');
     }
 
     /**

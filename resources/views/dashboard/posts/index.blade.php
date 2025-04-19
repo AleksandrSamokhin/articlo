@@ -40,9 +40,12 @@
 												@foreach($posts as $post)
 													<tr>
 														<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-															@if($post->thumb)
+															@if($post->getFirstMediaUrl('posts', 'thumb-128'))
+
+																<img src="{{ $post->getFirstMediaUrl('posts', 'thumb-128'); }}" alt="{{ $post->title }}" width="64" height="64" class="h-10 w-10 rounded-full">
+																{{--
 																<img src="{{ Storage::disk('s3')->temporaryUrl($post->thumb, now()->addMinutes(2)) }}" alt="{{ $post->title }}" width="64" height="64" class="h-10 w-10 rounded-full">
-																{{-- <img src="{{ asset($post->thumb) }}" alt="{{ $post->title }}" width="64" height="64" class="h-10 w-10 rounded-full"> --}}
+																 <img src="{{ asset($post->thumb) }}" alt="{{ $post->title }}" width="64" height="64" class="h-10 w-10 rounded-full"> --}}
 															@endif
 														</td>
 														<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
