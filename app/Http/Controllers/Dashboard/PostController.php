@@ -57,7 +57,7 @@ class PostController extends Controller
 
             $post
                 ->addMedia(storage_path('app/public/posts/tmp/' . $request->featured_image . '/' . $temporaryFile->filename))
-                ->toMediaCollection('posts');
+                ->toMediaCollection('posts', 'posts');
 
             // Delete the temporary file record
             rmdir(storage_path('app/public/posts/tmp/' . $request->featured_image));

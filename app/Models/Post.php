@@ -80,10 +80,12 @@ class Post extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('thumb-1170')
+            ->keepOriginalImageFormat()
             ->width(1170);
 
         $this
             ->addMediaConversion('thumb-128')
+            ->keepOriginalImageFormat()
             ->width(128)
             ->height(128);
     }

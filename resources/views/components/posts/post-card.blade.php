@@ -1,6 +1,6 @@
 <article>
-		@if ( $post->thumb )
-				<img src="{{ $post->getFirstMediaUrl('posts', 'thumb') }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded">
+		@if($post->getFirstMediaUrl('posts', 'thumb-128'))
+				<img src="{{ $post->getFirstMediaUrl('posts', 'thumb-128') }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded">
 				{{-- <img src="{{ Storage::disk('s3')->temporaryUrl($post->thumb, now()->addMinutes(2)) }}" alt="{{ $post->title }}" class="w-32 h-32 object-cover rounded"> --}}
 		@endif
 		<div>
