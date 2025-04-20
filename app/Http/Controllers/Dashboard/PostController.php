@@ -56,11 +56,11 @@ class PostController extends Controller
             $post = Post::create($validatedData);
 
             $post
-                ->addMedia(storage_path('app/public/posts/tmp/' . $request->featured_image . '/' . $temporaryFile->filename))
+                ->addMedia(storage_path('app/public/posts/tmp/'.$request->featured_image.'/'.$temporaryFile->filename))
                 ->toMediaCollection('posts', 'posts');
 
             // Delete the temporary file record
-            rmdir(storage_path('app/public/posts/tmp/' . $request->featured_image));
+            rmdir(storage_path('app/public/posts/tmp/'.$request->featured_image));
             $temporaryFile->delete();
 
         } else {
@@ -140,46 +140,67 @@ class PostController extends Controller
             $validatedData['slug'] = $slug;
         }
 
-        // Handle image upload if present
-        if ($request->hasFile('featured_image')) {
+        $temporaryFile = TemporaryFile::where('folder', $request->featured_image)->first();
+
+        if ($temporaryFile) {
             // Delete old images if they exist
-            if ($post->featured_image) {
-                // Get the extension from the current featured image path
-                $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
-
-                // Delete both featured and thumbnail images
-                Storage::disk('s3')->delete($post->featured_image);
-                Storage::disk('s3')->delete(str_replace('-featured.'.$extension, '-thumb.'.$extension, $post->featured_image));
-
-                // Delete the old folder
-                // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
+			if ( $post->getFirstMediaUrl('posts') ) {
+                $post->clearMediaCollection('posts');
             }
+  
+            $post
+                ->addMedia(storage_path('app/public/posts/tmp/'.$request->featured_image.'/'.$temporaryFile->filename))
+                ->toMediaCollection('posts', 'posts');
 
-            $manager = new ImageManager(new Driver);
-            $image = $manager->read($request->file('featured_image'));
-
-            // Use the new slug if title changed, otherwise use the current post's slug
-            $currentSlug = $validatedData['slug'] ?? $post->slug;
-
-            $extension = $request->file('featured_image')->getClientOriginalExtension();
-            $filename = $request->file('featured_image')->getClientOriginalName();
-
-            // Generate featured image (1170px wide, maintaining aspect ratio)
-            $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
-            $featuredPath = 'posts/'.$currentSlug.'/'.$currentSlug.'-featured.'.$extension;
-            Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
-
-            // Generate thumbnail (128x128)
-            $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
-            $thumbnailPath = 'posts/'.$currentSlug.'/'.$currentSlug.'-thumb.'.$extension;
-            Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);
-
-            $validatedData['featured_image'] = $featuredPath;
+            // Delete the temporary file record
+            rmdir(storage_path('app/public/posts/tmp/'.$request->featured_image));
+            $temporaryFile->delete();
         }
 
-        $post->update($validatedData);
+        $post->update($validatedData);       
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
+
+        // Handle image upload if present
+        // if ($request->hasFile('featured_image')) {
+        //     // Delete old images if they exist
+        //     if ($post->featured_image) {
+        //         // Get the extension from the current featured image path
+        //         $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
+
+        //         // Delete both featured and thumbnail images
+        //         Storage::disk('s3')->delete($post->featured_image);
+        //         Storage::disk('s3')->delete(str_replace('-featured.'.$extension, '-thumb.'.$extension, $post->featured_image));
+
+        //         // Delete the old folder
+        //         // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
+        //     }
+
+        //     $manager = new ImageManager(new Driver);
+        //     $image = $manager->read($request->file('featured_image'));
+
+        //     // Use the new slug if title changed, otherwise use the current post's slug
+        //     $currentSlug = $validatedData['slug'] ?? $post->slug;
+
+        //     $extension = $request->file('featured_image')->getClientOriginalExtension();
+        //     $filename = $request->file('featured_image')->getClientOriginalName();
+
+        //     // Generate featured image (1170px wide, maintaining aspect ratio)
+        //     $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
+        //     $featuredPath = 'posts/'.$currentSlug.'/'.$currentSlug.'-featured.'.$extension;
+        //     Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
+
+        //     // Generate thumbnail (128x128)
+        //     $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
+        //     $thumbnailPath = 'posts/'.$currentSlug.'/'.$currentSlug.'-thumb.'.$extension;
+        //     Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);
+
+        //     $validatedData['featured_image'] = $featuredPath;
+        // }
+
+        // $post->update($validatedData);
+
+        // return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
     }
 
     public function destroy(Post $post)
@@ -190,17 +211,17 @@ class PostController extends Controller
         }
 
         // Delete old images if they exist
-        if ($post->featured_image) {
-            // Get the extension from the current featured image path
-            $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
+        // if ($post->featured_image) {
+        //     // Get the extension from the current featured image path
+        //     $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
 
-            // Delete both featured and thumbnail images
-            Storage::disk('s3')->delete($post->featured_image);
-            Storage::disk('s3')->delete(str_replace('-featured.'.$extension, '-thumb.'.$extension, $post->featured_image));
+        //     // Delete both featured and thumbnail images
+        //     Storage::disk('s3')->delete($post->featured_image);
+        //     Storage::disk('s3')->delete(str_replace('-featured.'.$extension, '-thumb.'.$extension, $post->featured_image));
 
-            // Delete the folder
-            // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
-        }
+        //     // Delete the folder
+        //     // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
+        // }
 
         $post->delete();
 

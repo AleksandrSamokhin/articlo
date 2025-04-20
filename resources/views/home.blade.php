@@ -11,7 +11,6 @@
             <div>
                 <h2 class="text-xl font-semibold mb-4">Featured Posts</h2>
                 <div class="grid place-items-start mb-4 md:gap-16 gap-8 md:grid-cols-2 xl:grid-cols-3">
-
                     @foreach ($featuredPosts as $post)
                         <x-posts.post-card :post="$post" />
                     @endforeach
@@ -23,7 +22,7 @@
             <!-- Latest -->
             <div>
                 <h2 class="text-xl font-semibold mb-4">Latest Posts</h2>
-                <div class="space-y-6 mb-4">
+                <div class="grid place-items-start mb-4 md:gap-16 gap-8 md:grid-cols-2 xl:grid-cols-3">
                     @foreach ($posts as $post)
                         <x-posts.post-card :post="$post" />
                     @endforeach

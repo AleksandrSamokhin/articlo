@@ -77,4 +77,18 @@
             </div>
         </div>
     </div>
+    @section('scripts')
+        <script>
+            const inputElement = document.querySelector('input[id="featured_image"]');
+            const pond = FilePond.create(inputElement);
+            FilePond.setOptions({
+                server: {
+                    url: '/upload',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            });
+        </script>
+    @endsection
 </x-app-layout>
