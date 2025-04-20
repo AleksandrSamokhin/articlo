@@ -144,10 +144,10 @@ class PostController extends Controller
 
         if ($temporaryFile) {
             // Delete old images if they exist
-			if ( $post->getFirstMediaUrl('posts') ) {
+            if ($post->getFirstMediaUrl('posts')) {
                 $post->clearMediaCollection('posts');
             }
-  
+
             $post
                 ->addMedia(storage_path('app/public/posts/tmp/'.$request->featured_image.'/'.$temporaryFile->filename))
                 ->toMediaCollection('posts', 'posts');
@@ -157,7 +157,7 @@ class PostController extends Controller
             $temporaryFile->delete();
         }
 
-        $post->update($validatedData);       
+        $post->update($validatedData);
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
 
