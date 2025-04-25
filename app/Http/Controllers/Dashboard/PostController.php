@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use App\Jobs\SendNewPostEmail;
+use App\Mail\PostCreated;
+use Illuminate\Support\Facades\Mail;
+
 
 class PostController extends Controller
 {
@@ -66,6 +70,14 @@ class PostController extends Controller
         } else {
             $post = Post::create($validatedData);
         }
+
+        Mail::to(auth()->user()->email)->queue(new PostCreated( $post, auth()->user() ));
+
+        // dispatch(new SendNewPostEmail([
+        //     'sendTo' => auth()->user()->email,
+        //     'user' => auth()->user(),
+        //     'post' => $post,
+        // ]));
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post created successfully');
 
