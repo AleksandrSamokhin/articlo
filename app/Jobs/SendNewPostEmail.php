@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 
+use App\Mail\PostCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\PostCreated;
 
 class SendNewPostEmail implements ShouldQueue
 {
