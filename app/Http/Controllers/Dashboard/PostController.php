@@ -4,17 +4,16 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Jobs\SendNewPostEmail;
+use App\Mail\PostCreated;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\TemporaryFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-use App\Jobs\SendNewPostEmail;
-use App\Mail\PostCreated;
-use Illuminate\Support\Facades\Mail;
-
 
 class PostController extends Controller
 {
@@ -71,7 +70,7 @@ class PostController extends Controller
             $post = Post::create($validatedData);
         }
 
-        Mail::to(auth()->user()->email)->queue(new PostCreated( $post, auth()->user() ));
+        Mail::to(auth()->user()->email)->queue(new PostCreated($post, auth()->user()));
 
         // dispatch(new SendNewPostEmail([
         //     'sendTo' => auth()->user()->email,
