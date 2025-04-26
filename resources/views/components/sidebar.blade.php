@@ -1,4 +1,4 @@
-<aside class="w-1/4 bg-white p-6 shadow-md rounded-lg">
+<aside class="lg:w-1/4 w-full bg-white p-6 shadow-md rounded-lg">
 		<h2 class="text-xl font-semibold mb-4">Categories</h2>
 		<ul class="space-y-2">
 				@foreach ($categories as $category)
