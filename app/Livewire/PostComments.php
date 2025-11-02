@@ -18,7 +18,6 @@ class PostComments extends Component
         ]);
 
         $this->post->comments()->create([
-            'post_id' => $this->post->id,
             'user_id' => auth()->id(),
             'content' => $this->comment,
         ]);

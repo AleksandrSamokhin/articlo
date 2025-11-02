@@ -48,18 +48,27 @@
                                 }
                             }
                         </script>
-
+                        
+                        <livewire:post-content-generator />
+<!-- 
                         <div class="mt-4">
                             <x-input-label for="title" :value="__('Title')" />
                             <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" required />
                             <x-input-error :messages="$errors->get('title')" class="mt-2" />
                         </div>
-
+                       
                         <div class="mt-4">
                             <x-input-label for="content" :value="__('Content')" />
                             <x-textarea-input id="content" rows="6" class="block mt-1 w-full" name="content" required />
                             <x-input-error :messages="$errors->get('content')" class="mt-2" />
                         </div>
+
+                        <button type="button" onclick="generateText('header', 'openai')" class="underline">
+                            Ask AI to generate the content
+                        </button> -->
+
+                        <input type="hidden" name="title" wire:model="title">
+                        <input type="hidden" name="content" wire:model="content">
  
 
                         <div class="mt-4">
@@ -94,6 +103,28 @@
                     }
                 }
             });
+
+
+            // function generateText(type, provider) {
+            //     fetch('/text-generation', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            //         },
+            //         body: JSON.stringify({
+            //             type,
+            //             provider: provider,
+            //         })
+            //     })
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (type === 'header') {
+            //                 document.getElementById('content').value = data.text;
+            //             }
+            //         });
+            // }
+
         </script>
     @endsection
 </x-app-layout>
