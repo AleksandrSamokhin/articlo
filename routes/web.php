@@ -39,4 +39,3 @@ Route::get('categories/{category:slug}', [CategoryController::class, 'show'])->n
 Route::post('upload', [UploadController::class, 'store']);
 
 require __DIR__.'/auth.php';
-
