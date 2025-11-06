@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white shadow">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="container">
         <div class="flex justify-between h-16">
             <!-- Logo -->
             <div class="shrink-0 flex items-center">
@@ -14,12 +14,6 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
-                        {{ __('About') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
-                        {{ __('Contact') }}
                     </x-nav-link>
                 </div>
                 
@@ -54,12 +48,6 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 {{ __('Home') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
-                {{ __('About') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
-                {{ __('Contact') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}

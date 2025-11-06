@@ -9,8 +9,6 @@ use App\Http\Controllers\UploadController;
 use App\Http\Middleware\IsAdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/about', 'about')->name('about');
-Route::view('/contact', 'contact')->name('contact');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->group(function () {

@@ -4,7 +4,7 @@
 <main class="container mx-auto mt-6 lg:px-8 px-6 flex lg:flex-nowrap flex-wrap gap-6">
 
     <!-- Posts -->
-    <section class="lg:w-3/4 w-full">
+    <section>
 
         <!-- Featured -->
         @if ($featuredPosts->isNotEmpty())
@@ -37,8 +37,6 @@
         @endif
 
     </section>
-
-    <x-sidebar :categories="$categories" />
 
 </main>
 @endsection

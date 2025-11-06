@@ -6,9 +6,18 @@
         {{-- <img src="{{ Storage::disk('s3')->temporaryUrl($post->thumb, now()->addMinutes(2)) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover"> --}}
     @endif
     <div class="p-4 flex flex-col justify-between">
-        <a href={{ route('categories.show', $post->category) }} class="self-start text-sm font-medium text-blue-500 hover:underline">
-            <span>{{ $post->category->name }}</span>
-        </a>
+
+        @if($post->categories->isNotEmpty())
+            <div class="flex gap-2 flex-wrap">
+                @foreach($post->categories as $category)
+                    <a href="{{ route('categories.show', $category->slug) }}" 
+                    class="text-sm font-medium text-blue-500 hover:underline">
+                        {{ $category->name }}
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
         <span class="text-xs text-gray-400 mt-1">{{ $post->created_at->diffForHumans() }}</span>
         <h3 class="text-lg font-semibold mt-2">
             <a href="{{ route('posts.show', $post ) }}" class="hover:underline text-gray-800">{{ $post->title }}</a>

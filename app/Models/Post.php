@@ -11,6 +11,7 @@ use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Post extends Model implements HasMedia
 {
@@ -56,9 +57,9 @@ class Post extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
-    public function category()
+    public function categories() : BelongsToMany
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'category_post');
     }
 
     public function comments()
@@ -66,10 +67,10 @@ class Post extends Model implements HasMedia
         return $this->hasMany(Comment::class);
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class, 'post_tag');
-    }
+    // public function tags()
+    // {
+    //     return $this->belongsToMany(Tag::class, 'post_tag');
+    // }
 
     /**
      * Register the conversions that should be performed.

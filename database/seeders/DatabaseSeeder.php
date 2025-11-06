@@ -21,14 +21,20 @@ class DatabaseSeeder extends Seeder
         // Create user
         $users = User::factory()->create();
 
-        // Create 10 categories
+        // Create 5 categories
         $categories = Category::factory(5)->create();
 
-        // Create 10 posts
+        // Create 7 posts
         $posts = Post::factory(7)
             ->recycle($users)
             ->recycle($categories)
             ->create();
+
+        $posts->each(function ($post) use ($categories) {
+            $post->categories()->attach(
+                $categories->random(rand(1, 3))->pluck('id')->toArray()
+            );
+        });
 
         // Create comments for posts
         $posts->each(function ($post) {
@@ -38,12 +44,12 @@ class DatabaseSeeder extends Seeder
         });
 
         // Create tags and attach to posts
-        $tags = Tag::factory(20)->create();
+        // $tags = Tag::factory(20)->create();
 
-        $posts->each(function ($post) use ($tags) {
-            $post->tags()->attach(
-                $tags->random(rand(1, 3))->pluck('id')->toArray()
-            );
-        });
+        // $posts->each(function ($post) use ($tags) {
+        //     $post->tags()->attach(
+        //         $tags->random(rand(1, 3))->pluck('id')->toArray()
+        //     );
+        // });
     }
 }
