@@ -79,17 +79,3 @@ jobs:
             php artisan optimize
             php artisan queue:restart
             php artisan up
-
-      - name: Run Remote/Artisan Commands
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /var/www/laravel
-            php artisan down
-            php artisan migrate --force
-            php artisan optimize
-            php artisan queue:restart
-            php artisan up
