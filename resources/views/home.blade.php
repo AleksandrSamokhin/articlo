@@ -1,10 +1,10 @@
 @extends('layouts.blog')
  
 @section('content')
-<main class="container mx-auto mt-6 lg:px-8 px-6 flex lg:flex-nowrap flex-wrap gap-6">
+<main>
 
     <!-- Posts -->
-    <section>
+    <section class="container py-12">
 
         <!-- Featured -->
         @if ($featuredPosts->isNotEmpty())

@@ -12,6 +12,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=urbanist:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
         <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
 
@@ -19,7 +20,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="font-sans antialiased">
+    <body class="antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.dashboard.navigation')
 
@@ -37,7 +38,7 @@
                 {{ $slot }}
             </main>
         </div>
-    
+
         <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
         @yield('scripts')
         @livewireScripts
