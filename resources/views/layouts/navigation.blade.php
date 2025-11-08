@@ -1,4 +1,4 @@
-<header class="bg-white shadow">
+<header class="bg-white border-b border-slate-200">
     <nav x-data="{ open: false }">
         <!-- Primary Navigation Menu -->
         <div class="container">
@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="/">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="block h-9 w-auto fill-current text-slate-800" />
                     </a>
                 </div>                
 
@@ -21,9 +21,9 @@
                     <div class="flex items-center space-x-4 ms-8">
                         <div class="hidden sm:flex">
                             @auth
-                                <a href="{{ route('dashboard.posts.index') }}" class="self-center p-2 rounded-md border border-gray-200 text-gray-600 hover:text-gray-800">Dashboard</a>
+                                <a href="{{ route('dashboard.posts.index') }}" class="self-center text-sm font-medium p-2 rounded-md border border-slate-200 text-slate-600 hover:text-slate-800">Dashboard</a>
                             @else
-                                <a href="{{ route('login') }}" class="self-center -gray-600 hover:text-gray-800">Login</a>
+                                <a href="{{ route('login') }}" class="self-center text-sm font-medium text-slate-600 hover:text-slate-800">Login</a>
                             @endauth
                         </div>
             
@@ -34,7 +34,7 @@
 
                 <!-- Hamburger -->
                 <div class="-me-2 flex items-center sm:hidden">
-                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 focus:text-slate-500 transition duration-150 ease-in-out">
                         <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                             <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

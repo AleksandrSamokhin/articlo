@@ -67,11 +67,6 @@ class Post extends Model implements HasMedia
         return $this->hasMany(Comment::class);
     }
 
-    // public function tags()
-    // {
-    //     return $this->belongsToMany(Tag::class, 'post_tag');
-    // }
-
     /**
      * Register the conversions that should be performed.
      *

@@ -18,8 +18,8 @@
                 <h1 class="text-center">{{ $post->title }}</h1>
                 
                 <div class="flex justify-center">
-                    <p class="text-sm text-gray-500 mb-4">Published on {{ $post->created_at->format('M d, Y') }}</p>
-                    <p class="text-sm text-gray-500 mb-4">By {{ $post->user->name }}</p>
+                    <p class="text-sm text-slate-500 mb-4">Published on {{ $post->created_at->format('M d, Y') }}</p>
+                    <p class="text-sm text-slate-500 mb-4">By {{ $post->user->name }}</p>
                     <livewire:post-comment-count :count="$post->comments->count()" />
                 </div>
             </div>

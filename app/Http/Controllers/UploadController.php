@@ -26,4 +26,12 @@ class UploadController extends Controller
 
         return '';
     }
+
+    public function destroy(TemporaryFile $temporaryFile)
+    {
+        dd($temporaryFile);
+        $temporaryFile->delete();
+
+        return response()->json(['message' => 'Temporary file deleted successfully']);
+    }
 }

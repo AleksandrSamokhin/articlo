@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-slate-800 leading-tight">
             {{ __('New Post') }}
         </h2>
     </x-slot>
  
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="container">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+                <div class="p-6 text-slate-900">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -23,7 +23,7 @@
 
                         <div>
                             <x-input-label for="featured_image" :value="__('Featured Image')" />
-                            <x-text-input id="featured_image" class="block mt-1 w-full" type="file" name="featured_image" accept="image/*" onchange="previewImage(this);" />
+                            <x-text-input id="featured_image" class="block mt-1 w-full group" type="file" name="featured_image" accept="image/*" onchange="previewImage(this);" />
                             <x-input-error :messages="$errors->get('featured_image')" class="mt-2" />
                             <div class="mt-2 max-w-32">
                                 <img id="preview" src="" alt="Preview" style="max-width: 200px; display: none;" class="mt-2 rounded-lg shadow-sm">
@@ -50,22 +50,6 @@
                         </script>
                         
                         <livewire:post-content-generator />
-<!-- 
-                        <div class="mt-4">
-                            <x-input-label for="title" :value="__('Title')" />
-                            <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" required />
-                            <x-input-error :messages="$errors->get('title')" class="mt-2" />
-                        </div>
-                       
-                        <div class="mt-4">
-                            <x-input-label for="content" :value="__('Content')" />
-                            <x-textarea-input id="content" rows="6" class="block mt-1 w-full" name="content" required />
-                            <x-input-error :messages="$errors->get('content')" class="mt-2" />
-                        </div>
-
-                        <button type="button" onclick="generateText('header', 'openai')" class="underline">
-                            Ask AI to generate the content
-                        </button> -->
 
                         <input type="hidden" name="title" wire:model="title">
                         <input type="hidden" name="content" wire:model="content">
@@ -75,7 +59,7 @@
                             <div>
                                 <label for="category_id">Category:</label>
                             </div>
-                            <select name="category_id" id="category_id" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <select name="category_id" id="category_id" class="rounded-md shadow-sm border-slate-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach

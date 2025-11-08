@@ -1,6 +1,6 @@
-<footer class="bg-white border-t border-gray-200 mt-8">
+<footer class="bg-white border-t border-slate-200 mt-8">
 	<div class="container py-6">
-		<div class="text-center text-sm text-gray-500">
+		<div class="text-center text-sm text-slate-500">
 			© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
 		</div>
 	</div>

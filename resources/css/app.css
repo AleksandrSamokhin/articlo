@@ -31,6 +31,9 @@
     --font-size-5xl: 3rem;
     --font-size-6xl: 3.5rem;
     --font-size-7xl: 4rem;
+
+    /* Shadow color customization - using slate color with opacity */
+    --shadow-color: 215 27% 17% / 0.1; /* slate-900 with 10% opacity */
 }
 
 @utility container {
@@ -41,6 +44,19 @@
 }
 
 @layer base {
+    :root {
+        /* Override default shadow color to use slate */
+        --tw-shadow-color: rgb(15 23 42 / 0.1); /* slate-900 with 10% opacity */
+    }
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-slate-200, currentColor);
+    }
+
     body {
         @apply font-body;
     }
@@ -69,4 +85,17 @@
     h4 {
         @apply text-lg;
     }
+
+    button {
+        @apply cursor-pointer;
+    }
+}
+
+/* style filepond */
+.filepond--root {
+    @apply cursor-pointer border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md;
+}
+.filepond--drip,
+.filepond--panel-root {
+    @apply bg-slate-100  group-hover:bg-slate-200;
 }

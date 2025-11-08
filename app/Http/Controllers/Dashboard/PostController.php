@@ -151,6 +151,8 @@ class PostController extends Controller
             $validatedData['slug'] = $slug;
         }
 
+        dd($request);
+
         $temporaryFile = TemporaryFile::where('folder', $request->featured_image)->first();
 
         if ($temporaryFile) {

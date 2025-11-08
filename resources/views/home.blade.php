@@ -32,7 +32,7 @@
             </div>
         @else
             <div class="text-center">
-                <p class="text-gray-500">No posts available.</p>
+                <p class="text-slate-500">No posts available.</p>
             </div>
         @endif
 

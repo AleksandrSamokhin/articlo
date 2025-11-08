@@ -1,48 +1,27 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-slate-800 leading-tight">
             {{ __('Edit Post: ') . $post->title }}
         </h2>
     </x-slot>
  
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="container">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+                <div class="p-6 text-slate-900">
                     <form method="POST" action="{{ route('dashboard.posts.update', $post) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         
                         <div>
                             <x-input-label for="featured_image" :value="__('Featured Image')" />
-                            <x-text-input id="featured_image" class="block mt-1 w-full" type="file" name="featured_image" accept="image/*" onchange="previewImage(this);" />
+                            <x-text-input id="featured_image" class="mt-1 cursor-pointer" type="file" name="featured_image" accept="image/*" />
                             <x-input-error :messages="$errors->get('featured_image')" class="mt-2" />
 
-                            @if ( $post->featured_image )
-                                <div class="mt-2 max-w-32">
-                                    <img src="{{ asset( $post->featured_image) }}" id="preview" alt="{{ $post->title }}" class="rounded-lg shadow-sm">
-                                </div>
-                            @endif
+                            <div class="mt-2 max-w-32">
+                                <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-128') ?: '' }}" id="preview" alt="{{ $post->title }}" class="rounded-lg shadow-sm" style="{{ $post->getFirstMediaUrl('posts', 'thumb-128') ? '' : 'display: none;' }}">
+                            </div>
                         </div>
-
-                        <script>
-                            function previewImage(input) {
-                                const preview = document.getElementById('preview');
-                                if (input.files && input.files[0]) {
-                                    const reader = new FileReader();
-                                    
-                                    reader.onload = function(e) {
-                                        preview.src = e.target.result;
-                                        preview.style.display = 'block';
-                                    }
-                                    
-                                    reader.readAsDataURL(input.files[0]);
-                                } else {
-                                    preview.src = '';
-                                    preview.style.display = 'none';
-                                }
-                            }
-                        </script>
 
                         <div class="mt-4">
                             <x-input-label for="title" :value="__('Title')" />
@@ -52,7 +31,7 @@
 
                         <div class="mt-4">
                             <x-input-label for="content" :value="__('Content')" />
-                            <x-textarea-input id="content" rows="6" class="block mt-1 w-full" name="content" required>
+                            <x-textarea-input id="content" rows="10" class="block mt-1 w-full" name="content" required>
                                 {{ $post->content }}
                             </x-textarea-input>
                             <x-input-error :messages="$errors->get('content')" class="mt-2" />
@@ -87,6 +66,51 @@
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
+                }
+            });
+
+            // Show preview after file is added (immediate preview)
+            pond.on('addfile', (error, file) => {
+                if (error) {
+                    console.error('Error adding file:', error);
+                    return;
+                }
+                
+                const preview = document.getElementById('preview');
+                if (preview && file.file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file.file);
+                }
+            });
+
+            // Update preview after successful upload (XHR response)
+            pond.on('processfile', (error, file) => {
+                if (error) {
+                    console.error('Error processing file:', error);
+                    return;
+                }
+                
+                const preview = document.getElementById('preview');
+                if (preview && file.file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file.file);
+                }
+            });
+
+            // Hide preview when file is removed
+            pond.on('removefile', () => {
+                const preview = document.getElementById('preview');
+                if (preview) {
+                    preview.src = '';
+                    preview.style.display = 'none';
                 }
             });
         </script>
