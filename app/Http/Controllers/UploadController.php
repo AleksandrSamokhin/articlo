@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\TemporaryFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
     public function store(Request $request)
     {
 
-        if ($request->hasFile('featured_image')) {
-            $file = $request->file('featured_image');
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
             $filename = $file->getClientOriginalName();
             $folder = uniqid().'-'.now()->timestamp;
             $file->storeAs('posts/tmp/'.$folder, $filename);
@@ -27,11 +28,13 @@ class UploadController extends Controller
         return '';
     }
 
-    public function destroy(TemporaryFile $temporaryFile)
+    public function destroy()
     {
-        dd($temporaryFile);
-        $temporaryFile->delete();
-
-        return response()->json(['message' => 'Temporary file deleted successfully']);
+        $tmp_file = TemporaryFile::where('folder', request()->getContent())->first();
+        if ($tmp_file) {
+            Storage::deleteDirectory('posts/tmp/'.$tmp_file->folder);
+            $tmp_file->delete();
+            return response('');
+        }
     }
 }

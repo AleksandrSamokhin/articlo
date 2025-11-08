@@ -15,6 +15,10 @@
         <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
         <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+        <link
+            href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+            rel="stylesheet"
+        />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -39,6 +43,7 @@
             </main>
         </div>
 
+        <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
         <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
         @yield('scripts')
         @livewireScripts

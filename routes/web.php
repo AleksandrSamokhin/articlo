@@ -37,5 +37,6 @@ Route::get('search/{term}', [PostController::class, 'search'])->name('posts.sear
 Route::get('categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 Route::post('upload', [UploadController::class, 'store']);
+Route::delete('upload', [UploadController::class, 'destroy']);
 
 require __DIR__.'/auth.php';

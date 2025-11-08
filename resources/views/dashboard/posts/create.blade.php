@@ -22,9 +22,9 @@
                         @csrf
 
                         <div>
-                            <x-input-label for="featured_image" :value="__('Featured Image')" />
-                            <x-text-input id="featured_image" class="block mt-1 w-full group" type="file" name="featured_image" accept="image/*" onchange="previewImage(this);" />
-                            <x-input-error :messages="$errors->get('featured_image')" class="mt-2" />
+                            <x-input-label for="image" :value="__('Featured Image')" />
+                            <x-text-input id="image" class="block mt-1 w-full group" type="file" name="image" onchange="previewImage(this);" />
+                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             <div class="mt-2 max-w-32">
                                 <img id="preview" src="" alt="Preview" style="max-width: 200px; display: none;" class="mt-2 rounded-lg shadow-sm">
                             </div>
@@ -77,7 +77,7 @@
     </div>
     @section('scripts')
         <script>
-            const inputElement = document.querySelector('input[id="featured_image"]');
+            const inputElement = document.querySelector('input[id="image"]');
             const pond = FilePond.create(inputElement);
             FilePond.setOptions({
                 server: {

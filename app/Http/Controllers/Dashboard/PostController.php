@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -51,7 +52,9 @@ class PostController extends Controller
 
         $validatedData['slug'] = $slug;
 
-        $temporaryFile = TemporaryFile::where('folder', $request->featured_image)->first();
+        // dd($request->all());
+
+        $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
 
         if ($temporaryFile) {
 
@@ -59,11 +62,11 @@ class PostController extends Controller
             $post = Post::create($validatedData);
 
             $post
-                ->addMedia(storage_path('app/public/posts/tmp/'.$request->featured_image.'/'.$temporaryFile->filename))
+                ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
                 ->toMediaCollection('posts', 'posts');
 
             // Delete the temporary file record
-            rmdir(storage_path('app/public/posts/tmp/'.$request->featured_image));
+            Storage::deleteDirectory('posts/tmp/'.$request->image);
             $temporaryFile->delete();
 
         } else {
@@ -128,14 +131,21 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StorePostRequest $request, Post $post)
+    public function update(Request $request, Post $post)
     {
         // Check if the user is authorized to update the post
         if (auth()->user()->cannot('update', $post)) {
             abort(403);
         }
 
-        $validatedData = $request->validated();
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:254',
+            'content' => 'required|string',
+            // 'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|string',
+        ]);
+
+        // dd($request);
 
         // Update slug if title changed
         if ($post->title !== $validatedData['title']) {
@@ -151,9 +161,7 @@ class PostController extends Controller
             $validatedData['slug'] = $slug;
         }
 
-        dd($request);
-
-        $temporaryFile = TemporaryFile::where('folder', $request->featured_image)->first();
+        $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
 
         if ($temporaryFile) {
             // Delete old images if they exist
@@ -162,11 +170,11 @@ class PostController extends Controller
             }
 
             $post
-                ->addMedia(storage_path('app/public/posts/tmp/'.$request->featured_image.'/'.$temporaryFile->filename))
+                ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
                 ->toMediaCollection('posts', 'posts');
 
             // Delete the temporary file record
-            rmdir(storage_path('app/public/posts/tmp/'.$request->featured_image));
+            Storage::deleteDirectory('posts/tmp/'.$request->image);
             $temporaryFile->delete();
         }
 

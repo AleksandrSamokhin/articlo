@@ -18,7 +18,7 @@ class Post extends Model implements HasMedia
     use HasFactory, Searchable;
     use InteractsWithMedia;
 
-    protected $fillable = ['title', 'content', 'featured_image', 'category_id', 'user_id', 'slug'];
+    protected $fillable = ['title', 'content', 'image', 'category_id', 'user_id', 'slug'];
 
     /**
      * Scope a query to filter by category when provided.
@@ -48,7 +48,7 @@ class Post extends Model implements HasMedia
     protected function thumb(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->featured_image ? str_replace('-featured', '-thumb', $this->featured_image) : null,
+            get: fn () => $this->image ? str_replace('-featured', '-thumb', $this->image) : null,
         );
     }
 

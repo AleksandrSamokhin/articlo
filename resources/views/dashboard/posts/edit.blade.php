@@ -14,13 +14,15 @@
                         @method('PUT')
                         
                         <div>
-                            <x-input-label for="featured_image" :value="__('Featured Image')" />
-                            <x-text-input id="featured_image" class="mt-1 cursor-pointer" type="file" name="featured_image" accept="image/*" />
-                            <x-input-error :messages="$errors->get('featured_image')" class="mt-2" />
-
-                            <div class="mt-2 max-w-32">
-                                <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-128') ?: '' }}" id="preview" alt="{{ $post->title }}" class="rounded-lg shadow-sm" style="{{ $post->getFirstMediaUrl('posts', 'thumb-128') ? '' : 'display: none;' }}">
-                            </div>
+                            <x-input-label :value="__('Featured Image')" />
+                            <x-text-input id="image" class="mt-1 cursor-pointer" type="file" name="image" />
+                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                            
+                            @if ($post->getFirstMediaUrl('posts', 'thumb-128'))
+                                <div class="mt-2 max-w-32">
+                                    <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-128') }}" id="preview" alt="{{ $post->title }}" class="rounded-lg shadow-sm">
+                                </div>
+                            @endif
                         </div>
 
                         <div class="mt-4">
@@ -58,59 +60,18 @@
     </div>
     @section('scripts')
         <script>
-            const inputElement = document.querySelector('input[id="featured_image"]');
+            FilePond.registerPlugin(FilePondPluginImagePreview);
+
+            const inputElement = document.querySelector('input[type="file"]');
             const pond = FilePond.create(inputElement);
             FilePond.setOptions({
+                imagePreviewMaxHeight: 320,
                 server: {
-                    url: '/upload',
+                    process: '/upload',
+                    revert: '/upload',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
-                }
-            });
-
-            // Show preview after file is added (immediate preview)
-            pond.on('addfile', (error, file) => {
-                if (error) {
-                    console.error('Error adding file:', error);
-                    return;
-                }
-                
-                const preview = document.getElementById('preview');
-                if (preview && file.file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file.file);
-                }
-            });
-
-            // Update preview after successful upload (XHR response)
-            pond.on('processfile', (error, file) => {
-                if (error) {
-                    console.error('Error processing file:', error);
-                    return;
-                }
-                
-                const preview = document.getElementById('preview');
-                if (preview && file.file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file.file);
-                }
-            });
-
-            // Hide preview when file is removed
-            pond.on('removefile', () => {
-                const preview = document.getElementById('preview');
-                if (preview) {
-                    preview.src = '';
-                    preview.style.display = 'none';
                 }
             });
         </script>
