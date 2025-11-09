@@ -144,51 +144,66 @@ class PostController extends Controller
             abort(403);
         }
 
-        $validatedData = $request->validated();
+        try {
+            $validatedData = $request->validated();
 
-        // dd($request);
+            // dd($request);
 
-        // Update slug if title changed
-        if ($post->title !== $validatedData['title']) {
-            $slug = Str::slug($validatedData['title']);
+            // Update slug if title changed
+            if ($post->title !== $validatedData['title']) {
+                $slug = Str::slug($validatedData['title']);
 
-            // Check if the slug exists and append a number if it does
-            $count = 1;
-            while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
-                $slug = Str::slug($validatedData['title']).'-'.$count;
-                $count++;
+                // Check if the slug exists and append a number if it does
+                $count = 1;
+                while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
+                    $slug = Str::slug($validatedData['title']).'-'.$count;
+                    $count++;
+                }
+
+                $validatedData['slug'] = $slug;
             }
 
-            $validatedData['slug'] = $slug;
-        }
+            $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
 
-        $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
+            if ($temporaryFile) {
+                // Delete old images if they exist
+                if ($post->getFirstMediaUrl('posts')) {
+                    $post->clearMediaCollection('posts');
+                }
 
-        if ($temporaryFile) {
-            // Delete old images if they exist
-            if ($post->getFirstMediaUrl('posts')) {
-                $post->clearMediaCollection('posts');
+                $post
+                    ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
+                    ->toMediaCollection('posts', 'posts');
+
+                // Delete the temporary file record
+                Storage::deleteDirectory('posts/tmp/'.$request->image);
+                $temporaryFile->delete();
             }
 
-            $post
-                ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
-                ->toMediaCollection('posts', 'posts');
+            // Extract categories before updating the post
+            $categories = $validatedData['categories'] ?? [];
+            unset($validatedData['categories']);
 
-            // Delete the temporary file record
-            Storage::deleteDirectory('posts/tmp/'.$request->image);
-            $temporaryFile->delete();
+            $post->update($validatedData);
+
+            // Sync categories to the post
+            $post->categories()->sync($categories);
+
+            return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Post update failed: '.$e->getMessage(), [
+                'post_id' => $post->id,
+                'user_id' => auth()->id(),
+                'exception' => $e,
+            ]);
+
+            // Redirect back with error message
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Failed to update post. Please try again.');
         }
-
-        // Extract categories before updating the post
-        $categories = $validatedData['categories'] ?? [];
-        unset($validatedData['categories']);
-
-        $post->update($validatedData);
-
-        // Sync categories to the post
-        $post->categories()->sync($categories);
-
-        return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
 
         // Handle image upload if present
         // if ($request->hasFile('featured_image')) {
