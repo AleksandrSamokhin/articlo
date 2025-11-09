@@ -7,7 +7,7 @@
  
     <div class="py-12">
         <div class="container">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-slate-200">
 
 					@if (session('status') || session('success'))

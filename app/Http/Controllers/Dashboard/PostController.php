@@ -53,6 +53,9 @@ class PostController extends Controller
         $categories = $validatedData['categories'];
         unset($validatedData['categories']);
 
+        // Remove image from validated data (it's only used as temporary folder identifier)
+        unset($validatedData['image']);
+
         // dd($request->all());
 
         $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
@@ -147,6 +150,9 @@ class PostController extends Controller
             // Extract categories before updating the post
             $categories = $validatedData['categories'] ?? [];
             unset($validatedData['categories']);
+
+            // Remove image from validated data (it's only used as temporary folder identifier)
+            unset($validatedData['image']);
 
             $post->update($validatedData);
 

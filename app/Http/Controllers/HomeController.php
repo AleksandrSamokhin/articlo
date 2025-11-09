@@ -15,7 +15,7 @@ class HomeController extends Controller
             ->where('is_featured', false)
             ->byCategory()
             ->latest()
-            ->paginate(5);
+            ->paginate(6);
 
         $featuredPosts = Post::with('media')
             ->where('is_featured', true)

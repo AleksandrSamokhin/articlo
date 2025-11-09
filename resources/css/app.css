@@ -2,6 +2,8 @@
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views";
+
 @theme {
     --font-sans: Urbanist, ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",

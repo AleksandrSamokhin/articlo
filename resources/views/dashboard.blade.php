@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="container">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-slate-900">
                     {{ __("You're logged in!") }}
                 </div>

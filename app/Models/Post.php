@@ -18,7 +18,7 @@ class Post extends Model implements HasMedia
     use HasFactory, Searchable;
     use InteractsWithMedia;
 
-    protected $fillable = ['title', 'content', 'image', 'user_id', 'slug'];
+    protected $fillable = ['title', 'content', 'user_id', 'slug'];
 
     /**
      * Scope a query to filter by category when provided.
