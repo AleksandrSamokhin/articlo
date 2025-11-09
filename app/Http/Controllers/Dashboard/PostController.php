@@ -12,8 +12,6 @@ use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
 
 class PostController extends Controller
 {
@@ -88,40 +86,6 @@ class PostController extends Controller
         // ]));
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post created successfully');
-
-        // Handle image upload with nested folder structure (Intervention Image)
-        // if ($request->hasFile('featured_image')) {
-        //     $manager = new ImageManager(new Driver);
-        //     $image = $manager->read($request->file('featured_image'));
-
-        //     // Get original extension and filename
-        //     $extension = $request->file('featured_image')->getClientOriginalExtension();
-        //     $filename = $request->file('featured_image')->getClientOriginalName();
-
-        //     // Generate featured image (1170px wide, maintaining aspect ratio)
-        //     $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
-        //     $featuredPath = 'posts/'.$slug.'/'.$slug.'-featured.'.$extension;
-
-        //     Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
-
-        //     // Generate thumbnail (128x128)
-        //     $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
-        //     $thumbnailPath = 'posts/'.$slug.'/'.$slug.'-thumb.'.$extension;
-        //     Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);
-
-        //     // Store the featured image path in the database
-        //     $validatedData['featured_image'] = $featuredPath;
-        // }
-
-        // Default image upload
-        // if ($request->hasFile('featured_image')) {
-        //     $path = $request->file('featured_image')->store('posts');
-        //     $validatedData['featured_image'] = $path;
-        // }
-
-        // Post::create($validatedData);
-
-        // return redirect()->route('dashboard.posts.index')->with('success', 'Post created successfully');
     }
 
     /**
@@ -205,46 +169,6 @@ class PostController extends Controller
                 ->with('error', 'Failed to update post. Please try again.');
         }
 
-        // Handle image upload if present
-        // if ($request->hasFile('featured_image')) {
-        //     // Delete old images if they exist
-        //     if ($post->featured_image) {
-        //         // Get the extension from the current featured image path
-        //         $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
-
-        //         // Delete both featured and thumbnail images
-        //         Storage::disk('s3')->delete($post->featured_image);
-        //         Storage::disk('s3')->delete(str_replace('-featured.'.$extension, '-thumb.'.$extension, $post->featured_image));
-
-        //         // Delete the old folder
-        //         // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
-        //     }
-
-        //     $manager = new ImageManager(new Driver);
-        //     $image = $manager->read($request->file('featured_image'));
-
-        //     // Use the new slug if title changed, otherwise use the current post's slug
-        //     $currentSlug = $validatedData['slug'] ?? $post->slug;
-
-        //     $extension = $request->file('featured_image')->getClientOriginalExtension();
-        //     $filename = $request->file('featured_image')->getClientOriginalName();
-
-        //     // Generate featured image (1170px wide, maintaining aspect ratio)
-        //     $featuredData = $image->scaleDown(width: 1170)->encodeByExtension($extension)->toString();
-        //     $featuredPath = 'posts/'.$currentSlug.'/'.$currentSlug.'-featured.'.$extension;
-        //     Storage::disk('s3')->put($featuredPath, $featuredData, $filename, ['visibility' => 'public']);
-
-        //     // Generate thumbnail (128x128)
-        //     $thumbnailData = $image->cover(128, 128)->encodeByExtension($extension)->toString();
-        //     $thumbnailPath = 'posts/'.$currentSlug.'/'.$currentSlug.'-thumb.'.$extension;
-        //     Storage::disk('s3')->put($thumbnailPath, $thumbnailData, $filename, ['visibility' => 'public']);
-
-        //     $validatedData['featured_image'] = $featuredPath;
-        // }
-
-        // $post->update($validatedData);
-
-        // return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
     }
 
     public function destroy(Post $post)

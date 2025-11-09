@@ -3,7 +3,6 @@
         <a href="{{ route('posts.show', $post) }}" class="block overflow-hidden">
             <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-564') }}" alt="{{ $post->title }}" class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">
         </a>
-        {{-- <img src="{{ Storage::disk('s3')->temporaryUrl($post->thumb, now()->addMinutes(2)) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover"> --}}
     @endif
     <div class="p-4 flex flex-col justify-between">
 
