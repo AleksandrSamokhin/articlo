@@ -9,61 +9,33 @@
         <div class="container">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-slate-900">
-                    @if ($errors->any())
+                    @if (session('error'))
                         <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                            {{ session('error') }}
                         </div>
                     @endif
                     <form method="POST" action="{{ route('dashboard.posts.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div>
-                            <x-input-label for="image" :value="__('Featured Image')" />
-                            <x-text-input id="image" class="block mt-1 w-full group" type="file" name="image" onchange="previewImage(this);" />
+                            <x-input-label :value="__('Featured Image')" />
+                            <x-text-input id="image" class="mt-1 cursor-pointer" type="file" name="image" />
                             <x-input-error :messages="$errors->get('image')" class="mt-2" />
-                            <div class="mt-2 max-w-32">
-                                <img id="preview" src="" alt="Preview" style="max-width: 200px; display: none;" class="mt-2 rounded-lg shadow-sm">
-                            </div>
                         </div>
-
-                        <script>
-                            function previewImage(input) {
-                                const preview = document.getElementById('preview');
-                                if (input.files && input.files[0]) {
-                                    const reader = new FileReader();
-                                    
-                                    reader.onload = function(e) {
-                                        preview.src = e.target.result;
-                                        preview.style.display = 'block';
-                                    }
-                                    
-                                    reader.readAsDataURL(input.files[0]);
-                                } else {
-                                    preview.src = '';
-                                    preview.style.display = 'none';
-                                }
-                            }
-                        </script>
                         
                         <livewire:post-content-generator />
-
+{{-- 
                         <input type="hidden" name="title" wire:model="title">
-                        <input type="hidden" name="content" wire:model="content">
- 
+                        <input type="hidden" name="content" wire:model="content"> --}}
 
                         <div class="mt-4">
-                            <div>
-                                <label for="category_id">Category:</label>
-                            </div>
-                            <select name="category_id" id="category_id" class="rounded-md shadow-sm border-slate-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <x-input-label for="category_id" :value="__('Category:')" />
+
+                            <x-select name="category_id" id="category_id" class="block mt-1">
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" @selected($category->id == $post->category_id)>{{ $category->name }}</option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
 
                         <div class="mt-4">
@@ -77,11 +49,15 @@
     </div>
     @section('scripts')
         <script>
-            const inputElement = document.querySelector('input[id="image"]');
+            FilePond.registerPlugin(FilePondPluginImagePreview);
+
+            const inputElement = document.querySelector('input[type="file"]');
             const pond = FilePond.create(inputElement);
             FilePond.setOptions({
+                imagePreviewMaxHeight: 320,
                 server: {
-                    url: '/upload',
+                    process: '/upload',
+                    revert: '/upload',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }

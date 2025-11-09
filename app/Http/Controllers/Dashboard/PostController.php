@@ -25,11 +25,11 @@ class PostController extends Controller
         return view('dashboard.posts.index', compact('posts'));
     }
 
-    public function create()
+    public function create(Post $post)
     {
         $categories = Category::all();
 
-        return view('dashboard.posts.create', compact('categories'));
+        return view('dashboard.posts.create', compact('categories', 'post'));
     }
 
     /**
@@ -131,19 +131,14 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(StorePostRequest $request, Post $post)
     {
         // Check if the user is authorized to update the post
         if (auth()->user()->cannot('update', $post)) {
             abort(403);
         }
 
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:254',
-            'content' => 'required|string',
-            // 'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|string',
-        ]);
+        $validatedData = $request->validated();
 
         // dd($request);
 
