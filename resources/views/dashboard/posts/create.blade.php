@@ -29,13 +29,15 @@
                         <input type="hidden" name="content" wire:model="content"> --}}
 
                         <div class="mt-4">
-                            <x-input-label for="category_id" :value="__('Category:')" />
+                            <x-input-label for="categories" :value="__('Categories:')" />
 
-                            <x-select name="category_id" id="category_id" class="block mt-1">
+                            <x-select name="categories[]" id="categories" class="block mt-1" multiple>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" @selected($category->id == $post->category_id)>{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </x-select>
+                            <x-input-error :messages="$errors->get('categories')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('categories.*')" class="mt-2" />
                         </div>
 
                         <div class="mt-4">

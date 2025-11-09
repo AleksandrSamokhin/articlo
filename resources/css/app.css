@@ -99,3 +99,32 @@
 .filepond--panel-root {
     @apply bg-slate-100  group-hover:bg-slate-200;
 }
+
+/* style tom-select to match Tailwind design */
+.ts-wrapper.multi .ts-control {
+    @apply border-slate-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 rounded-md;
+}
+
+.ts-wrapper.single .ts-control {
+    @apply border-slate-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 rounded-md;
+}
+
+.ts-dropdown {
+    @apply border-slate-300 rounded-md shadow-sm;
+}
+
+.ts-dropdown .option.active {
+    @apply bg-indigo-100 text-indigo-900;
+}
+
+.ts-dropdown .option.selected {
+    @apply bg-indigo-500 text-white;
+}
+
+.ts-wrapper.multi .ts-control [data-value] {
+    @apply bg-indigo-100 text-indigo-900 rounded px-2 py-1;
+}
+
+.ts-wrapper.multi .ts-control [data-value] .remove {
+    @apply border-indigo-300 text-indigo-700 hover:bg-indigo-200;
+}

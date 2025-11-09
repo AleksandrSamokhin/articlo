@@ -16,5 +16,8 @@
         "postcss": "^8.5.6",
         "tailwindcss": "^4.1.17",
         "vite": "^7.2.1"
+    },
+    "dependencies": {
+        "tom-select": "^2.4.3"
     }
 }

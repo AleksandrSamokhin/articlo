@@ -52,15 +52,21 @@ class PostController extends Controller
 
         $validatedData['slug'] = $slug;
 
+        // Extract categories before creating the post
+        $categories = $validatedData['categories'];
+        unset($validatedData['categories']);
+
         // dd($request->all());
 
         $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
 
         if ($temporaryFile) {
-
-            // Spatie Media Library
             $post = Post::create($validatedData);
 
+            // Sync categories to the post
+            $post->categories()->sync($categories);
+            
+            // Spatie Media Library
             $post
                 ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
                 ->toMediaCollection('posts', 'posts');
@@ -71,6 +77,7 @@ class PostController extends Controller
 
         } else {
             $post = Post::create($validatedData);
+            $post->categories()->sync($categories);
         }
 
         Mail::to(auth()->user()->email)->queue(new PostCreated($post, auth()->user()));
@@ -173,7 +180,14 @@ class PostController extends Controller
             $temporaryFile->delete();
         }
 
+        // Extract categories before updating the post
+        $categories = $validatedData['categories'] ?? [];
+        unset($validatedData['categories']);
+
         $post->update($validatedData);
+
+        // Sync categories to the post
+        $post->categories()->sync($categories);
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
 

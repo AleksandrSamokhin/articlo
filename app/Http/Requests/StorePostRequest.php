@@ -24,7 +24,8 @@ class StorePostRequest extends FormRequest
         return [
             'title' => 'required|string|max:254',
             'content' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
+            'categories' => 'required|array|min:1',
+            'categories.*' => 'exists:categories,id',
             'image' => 'nullable|string',
         ];
     }

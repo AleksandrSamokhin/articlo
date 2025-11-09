@@ -18,7 +18,7 @@ class Post extends Model implements HasMedia
     use HasFactory, Searchable;
     use InteractsWithMedia;
 
-    protected $fillable = ['title', 'content', 'image', 'category_id', 'user_id', 'slug'];
+    protected $fillable = ['title', 'content', 'image', 'user_id', 'slug'];
 
     /**
      * Scope a query to filter by category when provided.
@@ -26,7 +26,9 @@ class Post extends Model implements HasMedia
     public function scopeByCategory(Builder $query): Builder
     {
         return $query->when(request('category_id'), function ($query) {
-            $query->where('category_id', request('category_id'));
+            $query->whereHas('categories', function ($q) {
+                $q->where('categories.id', request('category_id'));
+            });
         });
     }
 

@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
         // Create 7 posts
         $posts = Post::factory(7)
             ->recycle($users)
-            ->recycle($categories)
             ->create();
 
+        // Attach categories to posts (many-to-many relationship)
         $posts->each(function ($post) use ($categories) {
             $post->categories()->attach(
                 $categories->random(rand(1, 3))->pluck('id')->toArray()
@@ -42,14 +42,5 @@ class DatabaseSeeder extends Seeder
                 ->recycle($post->user)
                 ->create(['post_id' => $post->id]);
         });
-
-        // Create tags and attach to posts
-        // $tags = Tag::factory(20)->create();
-
-        // $posts->each(function ($post) use ($tags) {
-        //     $post->tags()->attach(
-        //         $tags->random(rand(1, 3))->pluck('id')->toArray()
-        //     );
-        // });
     }
 }
