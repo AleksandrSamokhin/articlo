@@ -34,6 +34,7 @@ class UploadController extends Controller
         if ($tmp_file) {
             Storage::deleteDirectory('posts/tmp/'.$tmp_file->folder);
             $tmp_file->delete();
+
             return response('');
         }
     }
