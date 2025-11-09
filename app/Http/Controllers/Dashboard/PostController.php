@@ -9,7 +9,6 @@ use App\Mail\PostCreated;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\TemporaryFile;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
