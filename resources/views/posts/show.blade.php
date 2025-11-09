@@ -31,7 +31,7 @@
             {{-- Display the post image --}}
 			@if ( $post->getFirstMediaUrl('posts', 'thumb-1170') )
                 <img src="{{ asset( $post->getFirstMediaUrl('posts', 'thumb-1170') ) }}" alt="{{ $post->title }}"/>
-                {{-- <img src="{{ asset( Storage::disk('s3')->url($post->featured_image) ) }}" alt="{{ $post->title }}"/> --}}
+                <img src="{{ asset( Storage::disk('s3')->url($post->featured_image) ) }}" alt="{{ $post->title }}"/>
 			@endif
             <div class="prose prose-lg mx-auto">
                 {!! $post->content !!}
