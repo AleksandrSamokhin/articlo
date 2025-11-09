@@ -64,7 +64,7 @@ class PostController extends Controller
 
             // Sync categories to the post
             $post->categories()->sync($categories);
-            
+
             // Spatie Media Library
             $post
                 ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
