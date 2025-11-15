@@ -3,9 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Category;
-use LivewireUI\Modal\ModalComponent;
-use Livewire\Attributes\Validate;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Validate;
+use LivewireUI\Modal\ModalComponent;
 
 class PostCreateCategory extends ModalComponent
 {
