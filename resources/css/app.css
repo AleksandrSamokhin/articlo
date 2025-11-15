@@ -51,6 +51,10 @@
         --tw-shadow-color: rgb(15 23 42 / 0.1); /* slate-900 with 10% opacity */
     }
 
+    [x-cloak] {
+        display: none !important;
+    }
+
     *,
     ::after,
     ::before,

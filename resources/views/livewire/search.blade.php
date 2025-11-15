@@ -14,8 +14,8 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
+        x-cloak
         class="fixed inset-0 z-50 bg-slate-900/50 overflow-y-auto"
-        style="display: none;"
     >
         <!-- Overlay Content -->
         <div class="relative flex items-start justify-center min-h-screen p-4 text-center">
@@ -46,6 +46,7 @@
                         </svg>
                     </div>
                     <input
+                        id="search-input"
                         x-ref="searchInput"
                         x-init="$watch('isOpen', value => { if(value) { $nextTick(() => $refs.searchInput.focus()) } })"
                         wire:model.live.debounce.250ms="search"

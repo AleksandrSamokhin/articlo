@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
  
-    <div class="py-12">
+    <div class="py-12" x-data="{}" x-on:category-created.window="window.location.reload()">
         <div class="container">
             <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-slate-900">
@@ -14,6 +14,7 @@
                             {{ session('error') }}
                         </div>
                     @endif
+
                     <form method="POST" action="{{ route('dashboard.posts.store') }}" enctype="multipart/form-data">
                         @csrf
 
@@ -24,9 +25,6 @@
                         </div>
                         
                         <livewire:post-content-generator />
-{{-- 
-                        <input type="hidden" name="title" wire:model="title">
-                        <input type="hidden" name="content" wire:model="content"> --}}
 
                         <div class="mt-4">
                             <x-input-label for="categories" :value="__('Categories:')" />
@@ -36,6 +34,13 @@
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </x-select>
+
+                            <button type="button"
+                            onclick="Livewire.dispatch('openModal', {'component': 'post-create-category'})"
+                            class="mt-2 text-sm text-blue-600 hover:text-blue-500">Create a new category</button>
+
+                            {{-- <livewire:post-create-category /> --}}
+
                             <x-input-error :messages="$errors->get('categories')" class="mt-2" />
                             <x-input-error :messages="$errors->get('categories.*')" class="mt-2" />
                         </div>
