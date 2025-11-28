@@ -11,7 +11,6 @@ use App\Models\Post;
 use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -45,8 +44,6 @@ class PostController extends Controller
 
         // Remove image from validated data (it's only used as temporary folder identifier)
         unset($validatedData['image']);
-
-        // dd($request->all());
 
         $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
 
@@ -104,20 +101,10 @@ class PostController extends Controller
         try {
             $validatedData = $request->validated();
 
-            // dd($request);
-
-            // Update slug if title changed
             if ($post->title !== $validatedData['title']) {
-                $slug = Str::slug($validatedData['title']);
-
-                // Check if the slug exists and append a number if it does
-                $count = 1;
-                while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
-                    $slug = Str::slug($validatedData['title']).'-'.$count;
-                    $count++;
-                }
-
-                $validatedData['slug'] = $slug;
+                $validatedData['slug'] = Post::generateUniqueSlug($validatedData['title'], $post->id);
+            } else {
+                $validatedData['slug'] = $post->slug;
             }
 
             $temporaryFile = TemporaryFile::where('folder', $request->image)->first();

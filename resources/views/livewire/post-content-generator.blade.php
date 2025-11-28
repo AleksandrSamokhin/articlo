@@ -1,13 +1,13 @@
 <div>
     <div class="mb-4">
         <x-input-label for="title" :value="__('Title')" />
-        <x-text-input id="title" name="title" class="block mt-1 w-full" type="text" wire:model="title" />
+        <x-text-input id="title" name="title" class="block mt-1 w-full" type="text" wire:model="title" required />
         <x-input-error :messages="$errors->get('title')" class="mt-2" />
     </div>
 
     <div class="mb-4">
         <x-input-label for="content" :value="__('Content')" />
-        <x-textarea-input id="content" name="content" rows="6" class="block mt-1 w-full" wire:model="content"  />
+        <x-textarea-input id="content" name="content" rows="6" class="block mt-1 w-full" wire:model="content" required />
         <x-input-error :messages="$errors->get('content')" class="mt-2" />
     </div>
 

@@ -20,13 +20,24 @@ class Post extends Model implements HasMedia
 
     protected $fillable = ['title', 'content', 'user_id', 'slug'];
 
-    public static function generateUniqueSlug(string $title): string
+    public static function generateUniqueSlug(string $title, ?int $postId = null): string
     {
         $slug = Str::slug($title);
         $count = 1;
-        while (self::where('slug', $slug)->exists()) {
+
+        $query = static::where('slug', $slug);
+        if ($postId) {
+            $query->where('id', '!=', $postId);
+        }
+
+        while ($query->exists()) {
             $slug = Str::slug($title).'-'.$count;
             $count++;
+
+            $query = static::where('slug', $slug);
+            if ($postId) {
+                $query->where('id', '!=', $postId);
+            }
         }
 
         return $slug;

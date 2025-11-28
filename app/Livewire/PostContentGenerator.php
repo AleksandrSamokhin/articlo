@@ -29,6 +29,10 @@ class PostContentGenerator extends Component
             return;
         }
 
+        $this->validate([
+            'title' => 'required|string|max:254',
+        ]);
+
         $this->error = '';
 
         if (empty($this->title)) {
