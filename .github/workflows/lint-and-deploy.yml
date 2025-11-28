@@ -50,6 +50,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
 
+      - name: Install Faker PHP
+        run: composer require fakerphp/faker
+
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:

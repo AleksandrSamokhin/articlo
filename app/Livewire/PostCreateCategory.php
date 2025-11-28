@@ -9,7 +9,7 @@ use LivewireUI\Modal\ModalComponent;
 
 class PostCreateCategory extends ModalComponent
 {
-    #[Validate('required|min:2|max:255|unique:categories,name')]
+    #[Validate('required|string|min:2|max:255|unique:categories,name')]
     public string $name = '';
 
     public function createCategory()

@@ -33,6 +33,18 @@ class UserFactory extends Factory
         ];
     }
 
+    public function normalUser(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'John Doe',
+            'email' => fake()->email(),
+            'email_verified_at' => now(),
+            'password' => static::$password ??= 'password',
+            'remember_token' => Str::random(10),
+            'is_admin' => false,
+        ]);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

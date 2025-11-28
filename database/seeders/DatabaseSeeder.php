@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,7 +19,10 @@ class DatabaseSeeder extends Seeder
     {
 
         // Create user
-        $users = User::factory()->create();
+        $users = User::firstOrCreate(
+            ['email' => 'samokhinteam@gmail.com'],
+            ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now()]
+        );        
 
         // Create 5 categories
         $categories = Category::factory(5)->create();
