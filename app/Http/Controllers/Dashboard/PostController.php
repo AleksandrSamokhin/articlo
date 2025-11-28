@@ -37,17 +37,7 @@ class PostController extends Controller
         $validatedData = $request->validated();
         $validatedData['user_id'] = auth()->id();
 
-        // Generate the base slug from the title
-        $slug = Str::slug($validatedData['title']);
-
-        // Check if the slug exists and append a number if it does
-        $count = 1;
-        while (Post::where('slug', $slug)->exists()) {
-            $slug = Str::slug($validatedData['title']).'-'.$count;
-            $count++;
-        }
-
-        $validatedData['slug'] = $slug;
+        $validatedData['slug'] = Post::generateUniqueSlug($validatedData['title']);
 
         // Extract categories before creating the post
         $categories = $validatedData['categories'];

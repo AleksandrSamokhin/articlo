@@ -7,8 +7,8 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class PostCreateCategoryTest extends TestCase
 {
@@ -17,7 +17,7 @@ class PostCreateCategoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // If your modal requires authentication
         $this->actingAs(User::factory()->create());
     }
@@ -89,7 +89,7 @@ class PostCreateCategoryTest extends TestCase
             ->call('createCategory');
 
         $category = Category::first();
-        
+
         $this->assertEquals('web-development-design', $category->slug);
     }
 
@@ -101,7 +101,7 @@ class PostCreateCategoryTest extends TestCase
             ->call('createCategory');
 
         $category = Category::first();
-        
+
         $this->assertEquals('Laravel Tips', $category->name);
         $this->assertEquals('laravel-tips', $category->slug);
     }
@@ -139,7 +139,6 @@ class PostCreateCategoryTest extends TestCase
             ->assertHasNoErrors();
     }
 
-
     #[Test]
     public function it_handles_special_characters_in_slug()
     {
@@ -148,7 +147,7 @@ class PostCreateCategoryTest extends TestCase
             ->call('createCategory');
 
         $category = Category::first();
-        
+
         $this->assertEquals('c-programming', $category->slug);
     }
 

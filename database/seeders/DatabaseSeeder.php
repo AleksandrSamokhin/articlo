@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $users = User::firstOrCreate(
             ['email' => 'samokhinteam@gmail.com'],
             ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now()]
-        );        
+        );
 
         // Create 5 categories
         $categories = Category::factory(5)->create();
