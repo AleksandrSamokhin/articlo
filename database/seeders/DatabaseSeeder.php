@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
-use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -21,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // Create user
         $users = User::firstOrCreate(
             ['email' => 'samokhinteam@gmail.com'],
-            ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now()]
+            ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now(), 'is_admin' => true]
         );
 
         // Create 5 categories
@@ -39,11 +38,11 @@ class DatabaseSeeder extends Seeder
             );
         });
 
-        // Create comments for posts
-        $posts->each(function ($post) {
-            Comment::factory(rand(0, 5))
-                ->recycle($post->user)
-                ->create(['post_id' => $post->id]);
-        });
+        // // Create comments for posts
+        // $posts->each(function ($post) {
+        //     Comment::factory(rand(0, 5))
+        //         ->recycle($post->user)
+        //         ->create(['post_id' => $post->id]);
+        // });
     }
 }

@@ -55,6 +55,11 @@
                             </x-select>
                             <x-input-error :messages="$errors->get('categories')" class="mt-2" />
                             <x-input-error :messages="$errors->get('categories.*')" class="mt-2" />
+
+                            <button type="button"
+                            onclick="Livewire.dispatch('openModal', {'component': 'post-create-category'})"
+                            class="mt-2 text-sm text-blue-600 hover:text-blue-500">Create a new category</button>
+                            
                         </div>
 
                         <div class="mt-4">

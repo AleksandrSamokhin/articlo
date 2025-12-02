@@ -30,13 +30,13 @@
             
             {{-- Display the post image --}}
 			@if ( $post->getFirstMediaUrl('posts', 'thumb-1170') )
-                <img src="{{ asset( $post->getFirstMediaUrl('posts', 'thumb-1170') ) }}" alt="{{ $post->title }}"/>
+                <img src="{{ asset( $post->getFirstMediaUrl('posts', 'thumb-1170') ) }}" alt="{{ $post->title }}" class="rounded-lg"/>
 			@endif
-            <div class="prose prose-lg mx-auto">
+            <div class="prose prose-lg mx-auto mt-8">
                 {!! $post->content !!}
             </div>
-            
-            <livewire:post-comments :post="$post" />
+
+            <livewire:comments :model="$post"/>
 
         </section>        
     </main>

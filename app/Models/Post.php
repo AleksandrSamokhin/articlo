@@ -12,12 +12,14 @@ use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Usamamuneerchaudhary\Commentify\Traits\Commentable;
 
 class Post extends Model implements HasMedia
 {
     use HasFactory, Searchable;
     use InteractsWithMedia;
-
+    use Commentable;
+    
     protected $fillable = ['title', 'content', 'user_id', 'slug'];
 
     public static function generateUniqueSlug(string $title, ?int $postId = null): string
@@ -85,11 +87,6 @@ class Post extends Model implements HasMedia
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_post');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
     }
 
     /**
