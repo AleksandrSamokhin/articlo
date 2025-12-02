@@ -23,12 +23,13 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $adminPassword = env('ADMIN_PASSWORD') ?? 'password';
         return [
             'name' => 'Aleksandr Samokhin',
             'email' => 'samokhinteam@gmail.com',
             'email_verified_at' => now(),
             'is_admin' => true,
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make($adminPassword),
             'remember_token' => Str::random(10),
         ];
     }

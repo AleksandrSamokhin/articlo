@@ -16,11 +16,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $adminPassword = env('ADMIN_PASSWORD') ?? 'password';
 
         // Create user
         $users = User::firstOrCreate(
             ['email' => 'samokhinteam@gmail.com'],
-            ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now(), 'is_admin' => true]
+            ['name' => 'Aleksandr Samokhin', 'password' => Hash::make($adminPassword), 'email_verified_at' => now(), 'is_admin' => true]
         );
 
         // Create 5 categories
