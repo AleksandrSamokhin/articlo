@@ -24,6 +24,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $adminPassword = env('ADMIN_PASSWORD') ?? 'password';
+
         return [
             'name' => 'Aleksandr Samokhin',
             'email' => 'samokhinteam@gmail.com',
