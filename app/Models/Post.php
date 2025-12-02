@@ -16,10 +16,10 @@ use Usamamuneerchaudhary\Commentify\Traits\Commentable;
 
 class Post extends Model implements HasMedia
 {
+    use Commentable;
     use HasFactory, Searchable;
     use InteractsWithMedia;
-    use Commentable;
-    
+
     protected $fillable = ['title', 'content', 'user_id', 'slug'];
 
     public static function generateUniqueSlug(string $title, ?int $postId = null): string
