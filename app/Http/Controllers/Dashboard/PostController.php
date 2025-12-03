@@ -161,19 +161,6 @@ class PostController extends Controller
             abort(403);
         }
 
-        // Delete old images if they exist
-        // if ($post->featured_image) {
-        //     // Get the extension from the current featured image path
-        //     $extension = pathinfo($post->featured_image, PATHINFO_EXTENSION);
-
-        //     // Delete both featured and thumbnail images
-        //     Storage::disk('s3')->delete($post->featured_image);
-        //     Storage::disk('s3')->delete(str_replace('-featured.'.$extension, '-thumb.'.$extension, $post->featured_image));
-
-        //     // Delete the folder
-        //     // Storage::disk('public')->deleteDirectory('posts/' . $post->slug);
-        // }
-
         $post->delete();
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post deleted successfully');

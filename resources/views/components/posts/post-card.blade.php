@@ -1,7 +1,7 @@
 <article class="bg-white shadow-slate-900/10 shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full">
     <div class="p-4 flex flex-col">
         {{-- Author and Date Header --}}
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center space-x-3 mb-3">
             <div class="flex items-center gap-2">
                 <a href="{{ route('profile.show', $post->user) }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">

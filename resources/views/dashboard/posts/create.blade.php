@@ -60,7 +60,7 @@
             const pond = FilePond.create(inputElement);
             FilePond.setOptions({
                 imagePreviewMaxHeight: 320,
-                server: {
+                server: {                    
                     process: '/upload',
                     revert: '/upload',
                     headers: {

@@ -13,9 +13,15 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <div>
+            <x-input-label :value="__('Avatar')" />
+            <x-text-input id="avatar" class="mt-1 cursor-pointer" type="file" name="avatar" />
+            <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -62,3 +68,23 @@
         </div>
     </form>
 </section>
+
+@section('scripts')
+    <script>
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+
+        const inputElement = document.querySelector('input[type="file"]');
+        const pond = FilePond.create(inputElement);
+        FilePond.setOptions({
+            imagePreviewMaxHeight: 320,
+            server: {
+                process: '/upload',
+                revert: '/upload',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }
+        });
+    </script>
+@endsection
+
