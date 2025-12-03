@@ -57,6 +57,18 @@ class Post extends Model implements HasMedia
         });
     }
 
+    /**
+     * Scope a query to filter posts from users that a given user follows.
+     */
+    public function scopeFromFollowedUsers(Builder $query, int $userId): Builder
+    {
+        return $query->whereIn('user_id', function ($subQuery) use ($userId) {
+            $subQuery->select('following_id')
+                ->from('follows')
+                ->where('follower_id', $userId);
+        });
+    }
+
     public function toSearchableArray()
     {
         return [

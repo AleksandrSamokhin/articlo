@@ -12,16 +12,14 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('dashboard.posts.index')" :active="request()->routeIs('dashboard.posts.index')">
-                        {{ __('Posts') }}
-                    </x-nav-link>
-                    {{-- <a href="{{ route('categories.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-slate-500 hover:text-slate-700 hover:border-slate-300 focus:outline-none focus:text-slate-700 focus:border-slate-300 transition duration-150 ease-in-out"> 
-                        Categories
-                    </a> --}}
-
+                    @if(auth()->user()->is_admin)
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('dashboard.posts.index')" :active="request()->routeIs('dashboard.posts.index')">
+                            {{ __('Posts') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 

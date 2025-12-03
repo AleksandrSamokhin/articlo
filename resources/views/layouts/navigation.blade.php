@@ -8,22 +8,34 @@
                     <a href="/">
                         <x-application-logo class="block h-9 w-auto fill-current text-slate-800" />
                     </a>
-                </div>                
-
+                </div>
+                
                 <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                        {{ __('Home') }}
+                    </x-nav-link>
+                </div>
+
                 <div class="flex ml-auto">
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                            {{ __('Home') }}
-                        </x-nav-link>
-                    </div>
-                    
                     <div class="flex items-center space-x-4 ms-8">
                         <div class="hidden sm:flex">
                             @auth
-                                <a href="{{ route('dashboard.posts.index') }}" class="self-center text-sm font-medium p-2 rounded-md border border-slate-200 text-slate-600 hover:text-slate-800">Dashboard</a>
+                                <a href="{{ route('profile.show', auth()->user()) }}" class="self-center text-sm font-medium text-slate-600 hover:text-slate-800 mr-4">{{ auth()->user()->name }}</a>
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <x-secondary-button tag="button" size="sm" onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                                        {{ __('Log Out') }}
+                                    </x-secondary-button>
+                                </form>
                             @else
-                                <a href="{{ route('login') }}" class="self-center text-sm font-medium text-slate-600 hover:text-slate-800">Login</a>
+                                <div class="flex items-center space-x-4">
+                                    <a href="{{ route('login') }}" class="self-center text-sm font-medium text-slate-600 hover:text-slate-800">Login</a>
+                                    <x-primary-button tag="a" size="sm" href="{{ route('register') }}">Sign Up</x-primary-button>
+                                </div>
                             @endauth
                         </div>
             
@@ -50,9 +62,19 @@
                 <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                     {{ __('Home') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('dashboard.posts.index')" :active="request()->routeIs('dashboard.posts.*')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
+                @auth
+                    <x-responsive-nav-link :href="route('dashboard.posts.index')" :active="request()->routeIs('dashboard.posts.*')">
+                        {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                @endauth
+                @guest
+                    <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')">
+                        {{ __('Login') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')">
+                        {{ __('Register') }}
+                    </x-responsive-nav-link>
+                @endguest
             </div>
         </div>
     </nav>
