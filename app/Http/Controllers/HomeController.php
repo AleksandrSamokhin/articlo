@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,10 @@ class HomeController extends Controller
             ->latest()
             ->paginate(3);
 
-        return view('home', compact('categories', 'posts', 'featuredPosts'));
+        $users = User::select('id', 'name', 'username')
+            ->latest()
+            ->paginate(10);
+
+        return view('home', compact('categories', 'posts', 'featuredPosts', 'users'));
     }
 }

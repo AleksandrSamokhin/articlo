@@ -1,32 +1,36 @@
-<article class="flex flex-col bg-white shadow-slate-900/10 shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full">
-    @if($post->getFirstMediaUrl('posts', 'thumb-564'))
-        <a href="{{ route('posts.show', $post) }}" class="block overflow-hidden">
-            <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-564') }}" alt="{{ $post->title }}" class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">
-        </a>
-    @endif
-    <div class="p-4 flex flex-col justify-between">
-
-        @if($post->categories->isNotEmpty())
-            <div class="flex gap-2 flex-wrap">
-                @foreach($post->categories as $category)
-                    <a href="{{ route('categories.show', $category->slug) }}" 
-                    class="text-sm font-medium text-blue-500 hover:underline">
-                        {{ $category->name }}
-                    </a>
-                @endforeach
+<article class="bg-white shadow-slate-900/10 shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full">
+    <div class="p-4 flex flex-col">
+        {{-- Author and Date Header --}}
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+                <a href="{{ route('profile.show', $post->user) }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">
+                        {{ strtoupper(substr($post->user->name, 0, 1)) }}
+                    </div>
+                    <span class="font-semibold text-slate-800">{{ $post->user->name }}</span>
+                </a>
             </div>
+            <span class="flex items-center gap-1 text-xs text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                </svg>
+                {{ $post->created_at->diffForHumans() }}
+            </span>
+        </div>
+
+        {{-- Post Content --}}
+        <div class="mb-3">
+            <h3 class="text-lg font-semibold mb-2">
+                <a href="{{ route('posts.show', $post) }}" class="hover:underline text-slate-800">{{ $post->title }}</a>
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed">{{ $post->excerpt }}</p>
+        </div>
+
+        {{-- Post Image --}}
+        @if($post->getFirstMediaUrl('posts', 'thumb-564'))
+            <a href="{{ route('posts.show', $post) }}" class="block overflow-hidden rounded-lg mt-2">
+                <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-564') }}" alt="{{ $post->title }}" class="w-full object-cover transition-transform duration-300 hover:scale-[1.02]">
+            </a>
         @endif
-
-        <h3 class="text-lg font-semibold mt-2">
-            <a href="{{ route('posts.show', $post ) }}" class="hover:underline text-slate-800">{{ $post->title }}</a>
-        </h3>
-        <p class="text-sm text-slate-600 mt-2">{{ $post->excerpt }}</p>
-
-        <span class="flex items-center gap-1 text-xs text-slate-400 mt-6">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
-            </svg>
-            {{ $post->created_at->diffForHumans() }}
-        </span>
     </div>
 </article>

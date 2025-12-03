@@ -11,23 +11,27 @@
                     </div>
                 @endif
 
-                <h1 class="font-semibold text-xl text-slate-800 leading-tight mb-4">
-                    {{ __('Profile:') }} {{ $user->name }}
-                </h1>
-
-                @if($user->id !== auth()->user()->id && !auth()->user()->isFollowing($user))
-                    <form action="{{ route('users.follow', $user->id) }}" method="POST">
-                    @csrf
-                        @method('POST')
-                        <x-primary-button type="submit">Follow</x-primary-button>
-                    </form>
-                @elseif($user->id !== auth()->user()->id && auth()->user()->isFollowing($user))
-                    <form action="{{ route('users.unfollow', $user->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <x-primary-button type="submit">Unfollow</x-primary-button>
-                    </form>
-                @endif
+                <div class="flex items-center space-x-3 mb-4">
+                    <h1 class="font-semibold text-xl text-slate-800 leading-tight">
+                        {{ __('Profile:') }} {{ $user->name }}
+                    </h1>
+                    
+                    @auth
+                        @if($user->id !== auth()->user()->id && !auth()->user()->isFollowing($user))
+                            <form action="{{ route('users.follow', $user->id) }}" method="POST">
+                            @csrf
+                                @method('POST')
+                                <x-primary-button size="sm" type="submit">Follow</x-primary-button>
+                            </form>
+                        @elseif($user->id !== auth()->user()->id && auth()->user()->isFollowing($user))
+                            <form action="{{ route('users.unfollow', $user->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <x-primary-button size="sm" type="submit">Unfollow</x-primary-button>
+                            </form>
+                        @endif
+                    @endauth
+                </div>
 
                 @if($posts->count() > 0)
                     <div class="w-full min-w-full space-y-2">
