@@ -1,4 +1,4 @@
-@extends('layouts.blog')
+@extends('layouts.public')
  
 @section('content')
 <main class="container mx-auto mt-6 flex gap-6">

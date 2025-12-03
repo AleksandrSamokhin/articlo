@@ -13,9 +13,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 
-    Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
+
+Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -28,11 +29,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
         return view('dashboard');
-    })->middleware(['verified', IsAdminMiddleware::class])->name('dashboard');
+    })->middleware(['verified'])->name('dashboard');
 
     Route::prefix('dashboard')
         ->name('dashboard.')
-        ->middleware(IsAdminMiddleware::class)
         ->group(function () {
             Route::resource('posts', Dashboard\PostController::class);
         });

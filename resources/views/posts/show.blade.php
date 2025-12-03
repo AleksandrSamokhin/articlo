@@ -1,4 +1,4 @@
-@extends('layouts.blog')
+@extends('layouts.public')
  
 @section('content')
     <main class="container">

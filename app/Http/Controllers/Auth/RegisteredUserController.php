@@ -31,7 +31,23 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:'.User::class],
+            'username' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                'not_in:admin,support,api,root,login,register,dashboard,profile',
+                'not_regex:/^admin$/i',
+                'not_regex:/^support$/i',
+                'not_regex:/^api$/i',
+                'not_regex:/^root$/i',
+                'not_regex:/^login$/i',
+                'not_regex:/^register$/i',
+                'not_regex:/^dashboard$/i',
+                'not_regex:/^profile$/i',
+                'alpha_dash',
+                'unique:'.User::class
+            ],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
