@@ -4,9 +4,30 @@
     <main class="bg-slate-50">
         <section class="container py-12">
             <div class="mb-8">
+
+                @if (session('error') || session('success'))
+                    <div class="p-4 mb-4 text-sm {{ session('error') ? 'text-red-800' : 'text-green-800' }} rounded-lg {{ session('error') ? 'bg-red-50' : 'bg-green-50' }} dark:bg-slate-800 dark:text-{{ session('error') ? 'red-400' : 'green-400' }}" role="alert">
+                        {{ session('error') ?? session('success') }}
+                    </div>
+                @endif
+
                 <h1 class="font-semibold text-xl text-slate-800 leading-tight mb-4">
                     {{ __('Profile:') }} {{ $user->name }}
                 </h1>
+
+                @if($user->id !== auth()->user()->id && !auth()->user()->isFollowing($user))
+                    <form action="{{ route('users.follow', $user->id) }}" method="POST">
+                    @csrf
+                        @method('POST')
+                        <x-primary-button type="submit">Follow</x-primary-button>
+                    </form>
+                @elseif($user->id !== auth()->user()->id && auth()->user()->isFollowing($user))
+                    <form action="{{ route('users.unfollow', $user->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <x-primary-button type="submit">Unfollow</x-primary-button>
+                    </form>
+                @endif
 
                 @if($posts->count() > 0)
                     <div class="w-full min-w-full space-y-2">
