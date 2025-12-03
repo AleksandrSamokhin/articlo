@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
                 'not_regex:/^dashboard$/i',
                 'not_regex:/^profile$/i',
                 'alpha_dash',
-                'unique:'.User::class
+                'unique:'.User::class,
             ],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -63,6 +63,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('profile.show', Auth::user()->username, absolute: false));
+        return redirect(route('dashboard.posts.index', absolute: false));
     }
 }

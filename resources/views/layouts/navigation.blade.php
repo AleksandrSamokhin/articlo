@@ -15,13 +15,16 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                        {{ __('Users') }}
+                    </x-nav-link>
                 </div>
 
                 <div class="flex ml-auto">
                     <div class="flex items-center space-x-4 ms-8">
                         <div class="hidden sm:flex">
                             @auth
-                                <a href="{{ route('profile.show', auth()->user()) }}" class="self-center text-sm font-medium text-slate-600 hover:text-slate-800 mr-4">{{ auth()->user()->name }}</a>
+                                <a href="{{ route('dashboard.posts.index', absolute: false) }}" class="self-center text-sm font-medium text-slate-600 hover:text-slate-800 mr-4">{{ auth()->user()->name }}</a>
 
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
