@@ -39,7 +39,9 @@
                 {!! $post->content !!}
             </div>
 
-            <livewire:comments :model="$post"/>
+            <div id="comments">
+                <livewire:comments :model="$post"/>
+            </div>
 
         </section>        
     </main>

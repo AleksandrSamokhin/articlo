@@ -13,7 +13,7 @@ class UploadController extends Controller
         // Determine file field and storage path
         $fileField = null;
         $storagePath = null;
-        
+
         if ($request->hasFile('image')) {
             $fileField = 'image';
             $storagePath = 'posts/tmp/';
@@ -46,13 +46,13 @@ class UploadController extends Controller
             // Try both possible storage paths
             $postsPath = 'posts/tmp/'.$tmp_file->folder;
             $avatarsPath = 'avatars/tmp/'.$tmp_file->folder;
-            
+
             if (Storage::exists($postsPath)) {
                 Storage::deleteDirectory($postsPath);
             } elseif (Storage::exists($avatarsPath)) {
                 Storage::deleteDirectory($avatarsPath);
             }
-            
+
             $tmp_file->delete();
 
             return response('');

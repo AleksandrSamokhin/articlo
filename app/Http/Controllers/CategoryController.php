@@ -12,6 +12,7 @@ class CategoryController extends Controller
 
         $posts = $category->posts()
             ->with('categories')
+            ->withCount('comments')
             ->paginate(5);
 
         return view('categories.show', compact('categories', 'category', 'posts'));

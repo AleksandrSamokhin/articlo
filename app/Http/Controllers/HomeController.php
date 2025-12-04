@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Benchmark;
 
 class HomeController extends Controller
 {
@@ -15,6 +14,7 @@ class HomeController extends Controller
         $categories = Category::all();
 
         $postsQuery = Post::with('media', 'user.media')
+            ->withCount('comments')
             ->where('is_featured', false)
             ->byCategory();
 
@@ -26,6 +26,7 @@ class HomeController extends Controller
         $posts = $postsQuery->latest()->paginate(6);
 
         $featuredPosts = Post::with('media', 'user.media')
+            ->withCount('comments')
             ->where('is_featured', true)
             ->byCategory()
             ->latest()

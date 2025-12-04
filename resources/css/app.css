@@ -64,7 +64,7 @@
     }
 
     body {
-        @apply font-body;
+        @apply font-body text-slate-800;
     }
 
     h1,
