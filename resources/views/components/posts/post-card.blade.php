@@ -3,7 +3,7 @@
         {{-- Author and Date Header --}}
         <div class="flex items-center space-x-3 mb-3">
             <div class="flex items-center gap-2">
-                <a href="{{ route('profile.show', $post->user) }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <a href="{{ route('users.show', $post->user) }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">
                         {{ strtoupper(substr($post->user->name, 0, 1)) }}
                     </div>

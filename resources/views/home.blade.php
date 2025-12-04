@@ -34,7 +34,7 @@
                         <div class="">
                             @foreach ($users as $user)
                                 @if($user->id !== auth()->user()->id)
-                                <a href="{{ route('profile.show', $user) }}" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                                <a href="{{ route('users.show', $user) }}" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
                                     <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold shrink-0">
                                         {{ strtoupper(substr($user->name, 0, 1)) }}
                                     </div>

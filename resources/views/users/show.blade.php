@@ -13,7 +13,7 @@
 
                 <div class="flex items-center space-x-3 mb-4">
                     <h1 class="font-semibold text-xl text-slate-800 leading-tight">
-                        {{ __('Profile:') }} {{ $user->name }}
+                        {{ __('User:') }} {{ $user->name }}
                     </h1>
                     
                     @auth

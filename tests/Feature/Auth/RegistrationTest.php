@@ -15,5 +15,5 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('profile.show', $user->username, absolute: false));
+    $response->assertRedirect(route('dashboard.posts.index', absolute: false));
 });

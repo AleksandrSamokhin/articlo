@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/{user:username}', [UserController::class, 'show'])->name('users.show');
 
 Route::middleware('auth')->group(function () {
 

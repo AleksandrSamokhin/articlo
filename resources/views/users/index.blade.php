@@ -9,7 +9,7 @@
 			@if($users->count() > 0)
 				<div class="space-y-2">
 					@foreach($users as $user)
-						<a href="{{ route('profile.show', $user->username) }}" class="p-4 bg-white rounded-lg shadow-sm flex items-center gap-4 hover:shadow-lg transition-shadow">
+						<a href="{{ route('users.show', $user->username) }}" class="p-4 bg-white rounded-lg shadow-sm flex items-center gap-4 hover:shadow-lg transition-shadow">
 							<span class="text-slate-900 hover:text-slate-600">{{ $user->name }}</span>
 						</a>
 					@endforeach

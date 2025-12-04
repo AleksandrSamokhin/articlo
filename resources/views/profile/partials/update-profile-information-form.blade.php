@@ -21,6 +21,12 @@
             <x-input-label :value="__('Avatar')" />
             <x-text-input id="avatar" class="mt-1 cursor-pointer" type="file" name="avatar" />
             <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
+
+            @if ($user->getFirstMediaUrl('avatars', 'thumb-64'))
+                <div class="mt-2 max-w-16 rounded-full">
+                    <img src="{{ $user->getFirstMediaUrl('avatars', 'thumb-64') }}" alt="{{ $user->name }}">
+                </div>
+            @endif
         </div>
 
         <div>

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,15 +13,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function show(User $user): View
-    {
-        $posts = $user->posts()->paginate(10);
-
-        return view('profile.show', [
-            'user' => $user,
-            'posts' => $posts,
-        ]);
-    }
 
     /**
      * Display the user's profile form.
