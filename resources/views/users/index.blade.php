@@ -6,10 +6,11 @@
 			<h1 class="font-semibold text-xl text-slate-800 leading-tight mb-4">
 				{{ __('Users') }}
 			</h1>
-			@if($users->count() > 0)
+			@if($users->isNotEmpty())
 				<div class="space-y-2">
 					@foreach($users as $user)
-						<a href="{{ route('users.show', $user->username) }}" class="p-4 bg-white rounded-lg shadow-sm flex items-center gap-4 hover:shadow-lg transition-shadow">
+						<a href="{{ route('users.show', $user->username) }}" class="p-4 bg-white rounded-lg shadow-sm flex items-center gap-3 hover:shadow-lg transition-shadow">
+							<x-users.user-avatar :user="$user" />
 							<span class="text-slate-900 hover:text-slate-600">{{ $user->name }}</span>
 						</a>
 					@endforeach

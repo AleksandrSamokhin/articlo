@@ -24,7 +24,10 @@
                         </svg>
                         {{ $post->created_at->diffForHumans() }}
                     </span>
-                    <p>By {{ $post->user->name }}</p>
+                    <span class="flex items-center gap-1">
+                        by <x-users.user-avatar :user="$post->user" class="size-5" />
+                        <a href="{{ route('users.show', $post->user->username) }}" class="text-blue-500 hover:underline">{{ $post->user->name }}</a>
+                    </span>
                 </div>
             </div>            
             

@@ -4,11 +4,9 @@
         <div class="flex items-center space-x-3 mb-3">
             <div class="flex items-center gap-2">
                 <a href="{{ route('users.show', $post->user) }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">
-                        {{ strtoupper(substr($post->user->name, 0, 1)) }}
-                    </div>
+                    <x-users.user-avatar :user="$post->user" />
                     <span class="font-semibold text-slate-800">{{ $post->user->name }}</span>
-                </a>
+                </a>                
             </div>
             <span class="flex items-center gap-1 text-xs text-slate-400">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
@@ -27,9 +25,9 @@
         </div>
 
         {{-- Post Image --}}
-        @if($post->getFirstMediaUrl('posts', 'thumb-564'))
+        @if($post->getFirstMediaUrl('posts', 'thumb-800'))
             <a href="{{ route('posts.show', $post) }}" class="block overflow-hidden rounded-lg mt-2">
-                <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-564') }}" alt="{{ $post->title }}" class="w-full object-cover transition-transform duration-300 hover:scale-[1.02]">
+                <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-800') }}" alt="{{ $post->title }}" class="w-full object-cover transition-transform duration-300 hover:scale-[1.02]">
             </a>
         @endif
     </div>
