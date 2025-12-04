@@ -14,7 +14,7 @@ class FeedController extends Controller
     {
         $user = Auth::user();
 
-        $posts = Post::with(['user', 'categories', 'media'])
+        $posts = Post::with(['user.media', 'categories', 'media'])
             ->fromFollowedUsers($user->id)
             ->latest()
             ->paginate(10);

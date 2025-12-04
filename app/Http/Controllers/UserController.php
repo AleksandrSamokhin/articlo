@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
-        $posts = $user->posts()->paginate(10);
+        $posts = $user->posts()->with('media')->paginate(10);
 
         return view('users.show', [
             'user' => $user,
