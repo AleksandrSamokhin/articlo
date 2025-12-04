@@ -12,8 +12,9 @@
                 @endif
 
                 <div class="flex items-center space-x-3 mb-4">
+                    <x-users.user-avatar :user="$user" />
                     <h1 class="font-semibold text-xl text-slate-800 leading-tight">
-                        {{ __('User:') }} {{ $user->name }}
+                        {{ $user->name }}
                     </h1>
                     
                     @auth
@@ -33,7 +34,8 @@
                     @endauth
                 </div>
 
-                @if($posts->count() > 0)
+                @if($posts->isNotEmpty())
+                    <h2 class="text-lg font-medium text-slate-900 mb-4">Posts</h2>
                     <div class="w-full min-w-full space-y-2">
                         @foreach($posts as $post)
                             <a href="{{ route('posts.show', $post->slug) }}" class="p-4 bg-white rounded-lg shadow-sm flex items-center gap-4 hover:shadow-lg transition-shadow">
@@ -52,10 +54,10 @@
                             </a>                                    
                         @endforeach
                     </div>
-                    @else
-                        <p class="text-slate-500">No posts found</p>
-                    @endif
-                </div>
-            </section>
-        </main>
-    @endsection
+                @else
+                    <p class="text-slate-500">No posts found</p>
+                @endif
+            </div>
+        </section>
+    </main>
+@endsection

@@ -21,7 +21,7 @@
             <h3 class="text-lg font-semibold mb-2">
                 <a href="{{ route('posts.show', $post) }}" class="hover:underline text-slate-800">{{ $post->title }}</a>
             </h3>
-            <p class="text-sm text-slate-600 leading-relaxed">{{ $post->excerpt }}</p>
+            <p class="text-sm text-slate-600 leading-relaxed">{!! Str::limit(strip_tags(Str::markdown($post->content)), 300) !!}</p>
         </div>
 
         {{-- Post Image --}}
