@@ -4,7 +4,7 @@
 <main class="bg-slate-50">
 
     <section class="container py-12">
-        <div class="flex gap-8">
+        <div class="flex flex-wrap gap-8">
             <!-- Main Content -->
             <div class="flex-1">
                 @if ($posts->isNotEmpty())
@@ -26,7 +26,7 @@
             </div>
 
             <!-- Right Sidebar -->
-            <aside class="w-1/4 shrink-0 hidden lg:block">
+            <aside class="w-full md:w-1/4 shrink-0">
                 @auth
                     <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
                         <h2 class="text-lg font-semibold text-slate-800 mb-4">Who to follow</h2>

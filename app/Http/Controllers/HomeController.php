@@ -24,17 +24,17 @@ class HomeController extends Controller
 
         $posts = $postsQuery->latest()->paginate(6);
 
-        $featuredPosts = Post::with('media', 'likes', 'user.media')
-            ->withCount(['comments', 'likes'])
-            ->where('is_featured', true)
-            ->byCategory()
-            ->latest()
-            ->paginate(3);
+        // $featuredPosts = Post::with('media', 'likes', 'user.media')
+        //     ->withCount(['comments', 'likes'])
+        //     ->where('is_featured', true)
+        //     ->byCategory()
+        //     ->latest()
+        //     ->paginate(3);
 
         $users = User::with('media')
             ->latest()
             ->paginate(10);
 
-        return view('home', compact('categories', 'posts', 'featuredPosts', 'users'));
+        return view('home', compact('categories', 'posts', 'users'));
     }
 }

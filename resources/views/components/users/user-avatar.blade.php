@@ -1,7 +1,7 @@
 @props(['user', 'class' => 'w-10 h-10'])
 
 @if ($user->getFirstMediaUrl('avatars', 'thumb-64'))
-	<div class="{{ $class }} rounded-full overflow-hidden">
+	<div class="{{ $class }} rounded-full overflow-hidden shrink-0">
 		<img class="w-full h-full object-cover" src="{{ $user->getFirstMediaUrl('avatars', 'thumb-64') }}" alt="{{ $user->name }}">
 	</div>
 @else
