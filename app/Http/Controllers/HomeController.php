@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -13,20 +12,20 @@ class HomeController extends Controller
     {
         $categories = Category::all();
 
-        $postsQuery = Post::with('media', 'user.media')
+        $postsQuery = Post::with('media', 'likes', 'user.media')
             ->withCount('comments')
             ->where('is_featured', false)
             ->byCategory();
 
         // Filter by followed users if authenticated
-        if (Auth::check()) {
-            $postsQuery->fromFollowedUsers(Auth::id());
+        if (auth()->check()) {
+            $postsQuery->fromFollowedUsers(auth()->id());
         }
 
         $posts = $postsQuery->latest()->paginate(6);
 
-        $featuredPosts = Post::with('media', 'user.media')
-            ->withCount('comments')
+        $featuredPosts = Post::with('media', 'likes', 'user.media')
+            ->withCount(['comments', 'likes'])
             ->where('is_featured', true)
             ->byCategory()
             ->latest()

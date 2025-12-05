@@ -13,14 +13,20 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Usamamuneerchaudhary\Commentify\Traits\Commentable;
+use App\Traits\HasPostLikes;
 
 class Post extends Model implements HasMedia
 {
     use Commentable;
     use HasFactory, Searchable;
     use InteractsWithMedia;
+    use HasPostLikes;
 
     protected $fillable = ['title', 'content', 'user_id', 'slug'];
+
+    protected $withCount = [
+        'likes',
+    ];
 
     public static function generateUniqueSlug(string $title, ?int $postId = null): string
     {

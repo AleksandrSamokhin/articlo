@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -12,7 +13,7 @@ class CategoryController extends Controller
 
         $posts = $category->posts()
             ->with('categories')
-            ->withCount('comments')
+            ->withCount(['comments', 'likes'])
             ->paginate(5);
 
         return view('categories.show', compact('categories', 'category', 'posts'));
