@@ -37,10 +37,10 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::get('posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 Route::get('search/{term}', [PostController::class, 'search'])->name('posts.search');
 
 Route::get('categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
-Route::get('{post:slug}', [PostController::class, 'show'])->name('posts.show');
 
 Route::post('upload', [UploadController::class, 'store']);
 Route::delete('upload', [UploadController::class, 'destroy']);
