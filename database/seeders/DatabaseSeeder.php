@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminPassword = env('ADMIN_PASSWORD') ?? 'password';
+        $adminPassword = config('app.admin_password');
 
         // Create user
         $users = User::firstOrCreate(

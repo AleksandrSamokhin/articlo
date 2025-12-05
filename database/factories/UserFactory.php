@@ -23,7 +23,7 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $adminPassword = env('ADMIN_PASSWORD') ?? 'password';
+        $adminPassword = config('app.admin_password');
 
         return [
             'name' => 'Aleksandr Samokhin',
