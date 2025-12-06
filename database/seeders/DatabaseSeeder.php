@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         // Create users
         $adminUser = User::firstOrCreate(
             ['email' => 'samokhinteam@gmail.com'],
-            ['username' => 'alexadmin', 'name' => 'Aleksandr Samokhin', 'password' => Hash::make($adminPassword), 'email_verified_at' => now(), 'is_admin' => true]
+            ['username' => 'admin', 'name' => 'Aleksandr Samokhin', 'password' => Hash::make($adminPassword), 'email_verified_at' => now(), 'is_admin' => true]
         );
 
         $users = User::factory(10)->create();
@@ -33,6 +33,12 @@ class DatabaseSeeder extends Seeder
             $usersToFollow->each(function ($userToFollow) use ($user) {
                 $user->following()->attach($userToFollow->id);
             });
+        });
+
+        // Create 10 avatars for users
+        $users->each(function ($user) {
+            $user->addMediaFromUrl('https://avatar.iran.liara.run/public')
+                ->toMediaCollection('avatars', 'avatars');
         });
 
         // Create 5 categories

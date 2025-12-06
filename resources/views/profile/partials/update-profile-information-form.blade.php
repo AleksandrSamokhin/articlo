@@ -22,9 +22,9 @@
             <x-text-input id="avatar" class="mt-1 cursor-pointer" type="file" name="avatar" />
             <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
 
-            @if ($user->getFirstMediaUrl('avatars', 'thumb-64'))
+            @if ($user->getFirstMediaUrl('avatars', 'thumb-40'))
                 <div class="mt-2 max-w-16 rounded-full overflow-hidden">
-                    <img class="w-full h-full object-cover" src="{{ $user->getFirstMediaUrl('avatars', 'thumb-64') }}" alt="{{ $user->name }}">
+                    <img class="w-full h-full object-cover" src="{{ $user->getFirstMediaUrl('avatars', 'thumb-40') }}" alt="{{ $user->name }}">
                 </div>
             @endif
         </div>
