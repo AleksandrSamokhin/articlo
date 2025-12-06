@@ -33,8 +33,16 @@ class HomeController extends Controller
 
         $users = User::with('media')
             ->latest()
-            ->paginate(10);
+            ->when(auth()->check(), fn($query) => $query->where('id', '!=', auth()->id()))
+            ->take(5)
+            ->get();
 
-        return view('home', compact('categories', 'posts', 'users'));
+        $popularPosts = Post::with('media', 'likes', 'user.media')
+            ->withCount(['comments', 'likes'])
+            ->orderBy('likes_count', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('home', compact('categories', 'posts', 'users', 'popularPosts'));
     }
 }

@@ -28,9 +28,7 @@
                     {{ $post->comments_count ?? 0 }}
                 </a>
             </div>
-        </div>
-
-        
+        </div>        
 
         {{-- Post Content --}}
         <div class="mb-3">

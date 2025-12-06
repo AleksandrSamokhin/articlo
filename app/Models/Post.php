@@ -75,6 +75,11 @@ class Post extends Model implements HasMedia
         });
     }
 
+    public function scopeWithLikes(Builder $query): Builder
+    {
+        return $query->withCount('likes');
+    }
+
     public function toSearchableArray()
     {
         return [
