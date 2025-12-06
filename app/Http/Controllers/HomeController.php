@@ -14,7 +14,7 @@ class HomeController extends Controller
 
         $postsQuery = Post::with('media', 'likes', 'user.media')
             ->withCount('comments')
-            ->where('is_featured', false)
+            // ->where('is_featured', false)
             ->byCategory();
 
         // Filter by followed users if authenticated

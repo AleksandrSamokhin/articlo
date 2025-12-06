@@ -18,18 +18,28 @@ class DatabaseSeeder extends Seeder
     {
         $adminPassword = config('app.admin_password');
 
-        // Create user
-        $users = User::firstOrCreate(
+        // Create users
+        $adminUser = User::firstOrCreate(
             ['email' => 'samokhinteam@gmail.com'],
-            ['username' => 'alexadmin'],
-            ['name' => 'Aleksandr Samokhin', 'password' => Hash::make($adminPassword), 'email_verified_at' => now(), 'is_admin' => true]
+            ['username' => 'alexadmin', 'name' => 'Aleksandr Samokhin', 'password' => Hash::make($adminPassword), 'email_verified_at' => now(), 'is_admin' => true]
         );
+
+        $users = User::factory(10)->create();
+
+        // Create random follow relationships between users
+        $users->each(function ($user) use ($users) {
+            // Each user follows 2-5 random other users
+            $usersToFollow = $users->where('id', '!=', $user->id)->random(rand(2, 5));
+            $usersToFollow->each(function ($userToFollow) use ($user) {
+                $user->following()->attach($userToFollow->id);
+            });
+        });
 
         // Create 5 categories
         $categories = Category::factory(5)->create();
 
-        // Create 7 posts
-        $posts = Post::factory(7)
+        // Create 20 posts
+        $posts = Post::factory(20)
             ->recycle($users)
             ->create();
 
@@ -40,11 +50,28 @@ class DatabaseSeeder extends Seeder
             );
         });
 
-        // // Create comments for posts
-        // $posts->each(function ($post) {
-        //     Comment::factory(rand(0, 5))
-        //         ->recycle($post->user)
-        //         ->create(['post_id' => $post->id]);
-        // });
+        // Add comments to posts from different users
+        $posts->each(function ($post) use ($users) {
+            // Each post gets 2-5 comments from random users
+            $commentCount = rand(2, 5);
+            for ($i = 0; $i < $commentCount; $i++) {
+                $post->comments()->create([
+                    'user_id' => $users->random()->id,
+                    'body' => fake()->paragraph(),
+                ]);
+            }
+        });
+
+        // Add post likes from different users
+        $posts->each(function ($post) use ($users) {
+            // Each post gets 3-8 likes from random users
+            $likingUsers = $users->random(rand(3, min(8, $users->count())));
+            $likingUsers->each(function ($user) use ($post) {
+                $post->likes()->create([
+                    'user_id' => $user->id,
+                ]);
+            });
+        });
+
     }
 }
