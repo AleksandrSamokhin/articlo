@@ -39,10 +39,9 @@
     --color-green-500: oklch(69.6% 0.17 162.48);
     --color-green-600: oklch(59.6% 0.145 163.225);
     --color-green-800: oklch(43.2% 0.095 166.913);
-
-    /* Shadow color customization - using slate color with opacity */
-    --shadow-color: 215 27% 17% / 0.1; /* slate-900 with 10% opacity */
 }
+
+
 
 @utility container {
     margin-inline: auto;
@@ -52,9 +51,9 @@
 }
 
 @layer base {
-    :root {
-        /* Override default shadow color to use slate */
-        --tw-shadow-color: rgb(15 23 42 / 0.1); /* slate-900 with 10% opacity */
+
+    [class*="shadow-"] {
+        @apply  shadow-slate-900/10;
     }
 
     [x-cloak] {

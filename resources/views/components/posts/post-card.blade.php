@@ -1,11 +1,13 @@
-<article class="bg-white shadow-slate-900/10 shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full">
+<article class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full">
     <div class="p-4 flex flex-col">
         {{-- Author and Date Header --}}
-        <div class="flex items-center justify-between space-x-3 mb-3">
-            <div class="flex items-center space-x-3 sm:basis-auto basis-0">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div class="flex sm:flex-nowrap flex-wrap items-center space-x-3">
                 <a href="{{ route('users.show', $post->user) }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <x-users.user-avatar :user="$post->user" />
-                    <span class="font-semibold text-slate-800 inline-block leading-5">{{ $post->user->name }}</span>
+                    <span class="overflow-ellipsis overflow-hidden">
+                        <span class="font-semibold text-slate-800 inline-block leading-5">{{ $post->user->name }}</span>
+                    </span>
                 </a>                
                 <span class="flex items-center flex-nowrap gap-1 text-xs text-slate-400">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 shrink-0">
