@@ -33,7 +33,7 @@ class HomeController extends Controller
 
         $users = User::with('media')
             ->latest()
-            ->when(auth()->check(), fn($query) => $query->where('id', '!=', auth()->id()))
+            ->when(auth()->check(), fn ($query) => $query->where('id', '!=', auth()->id()))
             ->take(5)
             ->get();
 
