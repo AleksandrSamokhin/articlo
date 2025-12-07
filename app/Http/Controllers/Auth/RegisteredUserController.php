@@ -31,12 +31,30 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                'not_in:admin,support,api,root,login,register,dashboard,profile',
+                'not_regex:/^admin$/i',
+                'not_regex:/^support$/i',
+                'not_regex:/^api$/i',
+                'not_regex:/^root$/i',
+                'not_regex:/^login$/i',
+                'not_regex:/^register$/i',
+                'not_regex:/^dashboard$/i',
+                'not_regex:/^profile$/i',
+                'alpha_dash',
+                'unique:'.User::class,
+            ],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -45,6 +63,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('dashboard.posts.index', absolute: false));
     }
 }

@@ -24,16 +24,7 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        $titles = [
-            'The Future of Technology',
-            'Health and Wellness Tips',
-            'The Rise of Biophilic Design: Bringing Nature Indoors',
-            'Marketing Strategies for 2023',
-            'Smart Homes 2.0: The Future of Residential Architecture',
-            'The Impact of AI on Society',
-            '5 Sustainable Materials Reshaping Modern Architecture',
-        ];
-        $title = fake()->unique()->randomElement($titles);
+        $title = fake()->sentence();
 
         return [
             'user_id' => User::factory(),

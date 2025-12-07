@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasPostLikes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,9 +19,14 @@ class Post extends Model implements HasMedia
 {
     use Commentable;
     use HasFactory, Searchable;
+    use HasPostLikes;
     use InteractsWithMedia;
 
     protected $fillable = ['title', 'content', 'user_id', 'slug'];
+
+    protected $withCount = [
+        'likes',
+    ];
 
     public static function generateUniqueSlug(string $title, ?int $postId = null): string
     {
@@ -55,6 +61,23 @@ class Post extends Model implements HasMedia
                 $q->where('categories.id', request('category_id'));
             });
         });
+    }
+
+    /**
+     * Scope a query to filter posts from users that a given user follows.
+     */
+    public function scopeFromFollowedUsers(Builder $query, int $userId): Builder
+    {
+        return $query->whereIn('user_id', function ($subQuery) use ($userId) {
+            $subQuery->select('following_id')
+                ->from('follows')
+                ->where('follower_id', $userId);
+        });
+    }
+
+    public function scopeWithLikes(Builder $query): Builder
+    {
+        return $query->withCount('likes');
     }
 
     public function toSearchableArray()
@@ -108,8 +131,8 @@ class Post extends Model implements HasMedia
             ->height(128);
 
         $this
-            ->addMediaConversion('thumb-564')
+            ->addMediaConversion('thumb-800')
             ->keepOriginalImageFormat()
-            ->width(564);
+            ->width(800);
     }
 }

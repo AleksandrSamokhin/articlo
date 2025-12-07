@@ -23,27 +23,29 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $adminPassword = env('ADMIN_PASSWORD') ?? 'password';
-
         return [
-            'name' => 'Aleksandr Samokhin',
-            'email' => 'samokhinteam@gmail.com',
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'is_admin' => true,
-            'password' => static::$password ??= Hash::make($adminPassword),
-            'remember_token' => Str::random(10),
-        ];
-    }
-
-    public function normalUser(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'name' => 'John Doe',
-            'email' => fake()->email(),
-            'email_verified_at' => now(),
+            'username' => fake()->userName(),
             'password' => static::$password ??= 'password',
             'remember_token' => Str::random(10),
             'is_admin' => false,
+        ];
+    }
+
+    public function adminUser(): static
+    {
+        $adminPassword = config('app.admin_password');
+
+        return $this->state(fn (array $attributes) => [
+            'name' => 'Aleksandr Samokhin',
+            'email' => 'samokhinteam@gmail.com',
+            'email_verified_at' => now(),
+            'username' => 'admin',
+            'is_admin' => true,
+            'password' => static::$password ??= Hash::make($adminPassword),
+            'remember_token' => Str::random(10),
         ]);
     }
 

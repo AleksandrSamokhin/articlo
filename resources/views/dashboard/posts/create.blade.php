@@ -10,7 +10,7 @@
             <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-slate-900">
                     @if (session('error'))
-                        <div class="alert alert-danger">
+                        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-slate-800 dark:text-red-400" role="alert">
                             {{ session('error') }}
                         </div>
                     @endif
@@ -60,7 +60,7 @@
             const pond = FilePond.create(inputElement);
             FilePond.setOptions({
                 imagePreviewMaxHeight: 320,
-                server: {
+                server: {                    
                     process: '/upload',
                     revert: '/upload',
                     headers: {
