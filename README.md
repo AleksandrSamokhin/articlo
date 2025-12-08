@@ -1,6 +1,6 @@
 <p align="center">
    <a href="https://articlo.aleksandrsamokhin.com" rel="nofollow">
-      <img src="https://raw.githubusercontent.com/AleksandrSamokhin/articlo/art/logo.svg" width="420" alt="Articlo Logo" style="max-width: 100%;">
+      <img src="https://github.com/AleksandrSamokhin/articlo/blob/main/art/logo.svg" width="420" alt="Articlo Logo" style="max-width: 100%;">
    </a>
 </p>
 
