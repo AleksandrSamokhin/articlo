@@ -71,9 +71,9 @@ jobs:
           SOURCE: "."
           REMOTE_HOST: ${{ secrets.VPS_HOST }}
           REMOTE_USER: ${{ secrets.VPS_USER }}
-          TARGET: "/var/www/laravel"
+          TARGET: "/var/www/articlo"
           SCRIPT_AFTER: |
-            cd /var/www/laravel
+            cd /var/www/articlo
             php artisan down
             php artisan migrate --force
             php artisan config:cache

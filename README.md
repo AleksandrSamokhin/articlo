@@ -1,59 +1,182 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+   <a href="https://articlo.aleksandrsamokhin.com" rel="nofollow">
+      <img src="https://raw.githubusercontent.com/AleksandrSamokhin/articlo/art/logo.svg" width="420" alt="Articlo Logo" style="max-width: 100%;">
+   </a>
 </p>
 
-## About Laravel
+# Articlo
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Articlo is a modern social media platform built with Laravel and Livewire, designed for sharing articles and engaging with content through likes, comments, and follows.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Core Functionality
+- **Posts & Articles**: Create, edit, and manage posts with rich content
+- **Categories**: Organize posts by categories for better discoverability
+- **User Profiles**: Customizable user profiles with avatars
+- **Follow System**: Follow and unfollow other users to curate your feed
+- **Likes**: Like posts to show appreciation
+- **Comments**: Engage with posts through threaded comments
+- **Search**: Full-text search powered by Laravel Scout
+- **AI Content Generation**: Generate post content using OpenAI
+- **Media Management**: Upload and manage images with automatic thumbnail generation
+- **Admin Dashboard**: Administrative interface for content management
 
-## Learning Laravel
+### Technical Features
+- **Real-time Updates**: Livewire components for dynamic interactions
+- **Queue System**: Background job processing for emails and notifications
+- **Email Notifications**: Automated emails for new posts and daily recaps
+- **File Uploads**: Drag-and-drop file uploads with FilePond
+- **Responsive Design**: Modern UI built with Tailwind CSS 4
+- **API Support**: Laravel Sanctum for API authentication
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Framework**: Laravel 12
+- **Frontend**: Livewire 3, Tailwind CSS 4, Vite
+- **PHP**: 8.2+
+- **Database**: SQLite (development) / MySQL/PostgreSQL (production)
+- **Search**: Laravel Scout
+- **Media**: Spatie Media Library
+- **Authentication**: Laravel Breeze
+- **Testing**: Pest PHP
+- **Code Quality**: Laravel Pint
 
-## Laravel Sponsors
+## Requirements
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.2 or higher
+- Composer
+- Node.js 20+ and npm
+- SQLite (for development) or MySQL/PostgreSQL (for production)
 
-### Premium Partners
+## Installation
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/aleksandrsamokhin/articlo.git
+   cd articlo
+   ```
+
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Install JavaScript dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Set up environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+5. **Configure your `.env` file**
+   - Set up your database connection
+   - Add OpenAI API key for content generation (optional)
+   - Configure mail settings
+
+6. **Run migrations**
+   ```bash
+   php artisan migrate
+   ```
+
+7. **Build assets**
+   ```bash
+   npm run build
+   ```
+
+8. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
+
+   Or use the dev script for concurrent server, queue, and Vite:
+   ```bash
+   composer run dev
+   ```
+
+## Available Scripts
+
+- `composer setup` - Complete setup (install dependencies, generate key, migrate, build assets)
+- `composer dev` - Start development server with queue and Vite
+- `composer pint` - Run Laravel Pint for code formatting
+- `composer test` - Run Pest tests
+- `npm run dev` - Start Vite development server
+- `npm run build` - Build production assets
+
+## Project Structure
+
+```
+articlo/
+├── app/
+│   ├── Enums/              # Application enums
+│   ├── Http/
+│   │   ├── Controllers/    # Application controllers
+│   │   ├── Middleware/     # Custom middleware
+│   │   └── Requests/       # Form request validation
+│   ├── Jobs/               # Queue jobs
+│   ├── Livewire/           # Livewire components
+│   ├── Mail/               # Email templates
+│   ├── Models/             # Eloquent models
+│   ├── Policies/           # Authorization policies
+│   ├── Services/           # Business logic services
+│   └── Traits/             # Reusable traits
+├── database/
+│   ├── factories/          # Model factories
+│   ├── migrations/         # Database migrations
+│   └── seeders/            # Database seeders
+├── resources/
+│   ├── css/                # Stylesheets
+│   ├── js/                 # JavaScript
+│   └── views/              # Blade templates
+└── routes/                 # Application routes
+```
+
+## Key Packages
+
+- **Livewire 3.6** - Full-stack framework for dynamic interfaces
+- **Laravel Scout 10.14** - Full-text search
+- **Spatie Media Library 11.12** - Media management
+- **Commentify 3.0** - Comment system
+- **Wire Elements Modal 3.0** - Modal dialogs
+- **Intervention Image** - Image manipulation
+- **Laravel Sanctum 4.0** - API authentication
+
+## Testing
+
+Run tests using Pest:
+
+```bash
+composer test
+```
+
+## Code Style
+
+This project uses Laravel Pint for code formatting. Run it with:
+
+```bash
+composer pint
+```
+
+## Deployment
+
+The project includes a GitHub Actions workflow for automated deployment. The workflow:
+- Runs code linting with Pint
+- Deploys to a VPS via SSH
+- Runs migrations and optimizes the application
+
+Configure the following secrets in GitHub:
+- `SSH_PRIVATE_KEY` - SSH private key for deployment
+- `VPS_HOST` - VPS hostname
+- `VPS_USER` - SSH username
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Articlo project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

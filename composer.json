@@ -1,11 +1,13 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "aleksandrsamokhin/articlo",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Articlo is a social media platform built with Laravel and Livewire.",
     "keywords": [
         "laravel",
-        "framework"
+        "framework",
+        "social media",
+        "livewire"
     ],
     "license": "MIT",
     "require": {
