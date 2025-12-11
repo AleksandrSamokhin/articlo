@@ -25,9 +25,7 @@
                             <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             
                             @if ($post->getFirstMediaUrl('posts', 'thumb-128'))
-                                <div class="mt-2 max-w-32">
-                                    <img src="{{ $post->getFirstMediaUrl('posts', 'thumb-128') }}" id="preview" alt="{{ $post->title }}" class="rounded-lg shadow-sm">
-                                </div>
+                                @livewire('post-remove-image', ['post' => $post])
                             @endif
                         </div>
 
