@@ -81,4 +81,5 @@ jobs:
             php artisan view:cache
             php artisan optimize
             php artisan queue:restart
+            php artisan horizon:terminate
             php artisan up
