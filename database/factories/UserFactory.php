@@ -37,10 +37,11 @@ class UserFactory extends Factory
     public function adminUser(): static
     {
         $adminPassword = config('app.admin_password');
+        $adminEmail = config('app.admin_email');
 
         return $this->state(fn (array $attributes) => [
             'name' => 'Aleksandr Samokhin',
-            'email' => 'samokhinteam@gmail.com',
+            'email' => $adminEmail,
             'email_verified_at' => now(),
             'username' => 'admin',
             'is_admin' => true,

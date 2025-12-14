@@ -124,5 +124,6 @@ return [
     ],
 
     'admin_password' => env('ADMIN_PASSWORD', 'password'),
+    'admin_email' => env('ADMIN_EMAIL', 'testemail@gmail.com'),
 
 ];

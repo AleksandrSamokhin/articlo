@@ -17,10 +17,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $adminPassword = config('app.admin_password');
+        $adminEmail = config('app.admin_email');
 
         // Create users
         $adminUser = User::firstOrCreate(
-            ['email' => 'samokhinteam@gmail.com'],
+            ['email' => $adminEmail],
             ['username' => 'admin', 'name' => 'Aleksandr Samokhin', 'password' => Hash::make($adminPassword), 'email_verified_at' => now(), 'is_admin' => true]
         );
 

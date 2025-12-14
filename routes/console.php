@@ -11,5 +11,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::call(function () {
-    Mail::to('samokhinteam@gmail.com')->send(new DailyRecap);
+    $adminEmail = config('app.admin_email');
+
+    Mail::to($adminEmail)->send(new DailyRecap);
 })->daily()->at('10:00')->timezone('Asia/Manila');
