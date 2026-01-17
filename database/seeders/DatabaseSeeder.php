@@ -38,7 +38,8 @@ class DatabaseSeeder extends Seeder
 
         // Create 10 avatars for users
         $users->each(function ($user) {
-            $user->addMediaFromUrl('https://avatar.iran.liara.run/public')
+            $user->addMediaFromUrl("https://api.dicebear.com/9.x/pixel-art/svg?seed={$user->id}")
+                ->usingFileName("avatar-{$user->id}.svg")
                 ->toMediaCollection('avatars', 'avatars');
         });
 

@@ -15,3 +15,8 @@ Schedule::call(function () {
 
     Mail::to($adminEmail)->send(new DailyRecap);
 })->daily()->at('10:00')->timezone('Asia/Manila');
+
+Schedule::command('app:clear-temp-folder')
+    ->daily()
+    ->at('02:00')
+    ->timezone('Asia/Manila');

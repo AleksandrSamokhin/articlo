@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
-use App\Jobs\SendNewPostEmail;
 use App\Mail\PostCreated;
 use App\Models\Category;
 use App\Models\Post;
-use App\Models\TemporaryFile;
+use App\Services\PostService;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -31,49 +29,19 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request, PostService $postService)
     {
         $validatedData = $request->validated();
-        $validatedData['user_id'] = auth()->id();
-
-        $validatedData['slug'] = Post::generateUniqueSlug($validatedData['title']);
-
-        // Extract categories before creating the post
         $categories = $validatedData['categories'];
-        unset($validatedData['categories']);
 
-        // Remove image from validated data (it's only used as temporary folder identifier)
-        unset($validatedData['image']);
+        $postData = $postService->preparePostData($validatedData, auth()->id());
 
-        $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
+        $post = Post::create($postData);
+        $post->categories()->sync($categories);
 
-        if ($temporaryFile) {
-            $post = Post::create($validatedData);
-
-            // Sync categories to the post
-            $post->categories()->sync($categories);
-
-            // Spatie Media Library
-            $post
-                ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
-                ->toMediaCollection('posts', 'posts');
-
-            // Delete the temporary file record
-            Storage::deleteDirectory('posts/tmp/'.$request->image);
-            $temporaryFile->delete();
-
-        } else {
-            $post = Post::create($validatedData);
-            $post->categories()->sync($categories);
-        }
+        $postService->handleTemporaryFileUpload($post, $request->image);
 
         Mail::to(auth()->user()->email)->queue(new PostCreated($post, auth()->user()));
-
-        // dispatch(new SendNewPostEmail([
-        //     'sendTo' => auth()->user()->email,
-        //     'user' => auth()->user(),
-        //     'post' => $post,
-        // ]));
 
         return redirect()->route('dashboard.posts.index')->with('success', 'Post created successfully');
     }
@@ -91,67 +59,36 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StorePostRequest $request, Post $post)
+    public function update(StorePostRequest $request, Post $post, PostService $postService)
     {
-        // Check if the user is authorized to update the post
         if (auth()->user()->cannot('update', $post)) {
             abort(403);
         }
-
+        
         try {
             $validatedData = $request->validated();
-
-            if ($post->title !== $validatedData['title']) {
-                $validatedData['slug'] = Post::generateUniqueSlug($validatedData['title'], $post->id);
-            } else {
-                $validatedData['slug'] = $post->slug;
-            }
-
-            $temporaryFile = TemporaryFile::where('folder', $request->image)->first();
-
-            if ($temporaryFile) {
-                // Delete old images if they exist
-                if ($post->getFirstMediaUrl('posts')) {
-                    $post->clearMediaCollection('posts');
-                }
-
-                $post
-                    ->addMedia(storage_path('app/public/posts/tmp/'.$request->image.'/'.$temporaryFile->filename))
-                    ->toMediaCollection('posts', 'posts');
-
-                // Delete the temporary file record
-                Storage::deleteDirectory('posts/tmp/'.$request->image);
-                $temporaryFile->delete();
-            }
-
-            // Extract categories before updating the post
             $categories = $validatedData['categories'] ?? [];
-            unset($validatedData['categories']);
 
-            // Remove image from validated data (it's only used as temporary folder identifier)
-            unset($validatedData['image']);
+            $postService->handleTemporaryFileUpload($post, $request->image, clearExisting: true);
 
-            $post->update($validatedData);
+            $postData = $postService->preparePostDataForUpdate($validatedData, $post);
 
-            // Sync categories to the post
+            $post->update($postData);
             $post->categories()->sync($categories);
 
             return redirect()->route('dashboard.posts.index')->with('success', 'Post updated successfully');
         } catch (\Exception $e) {
-            // Log the error for debugging
             \Log::error('Post update failed: '.$e->getMessage(), [
                 'post_id' => $post->id,
                 'user_id' => auth()->id(),
                 'exception' => $e,
             ]);
 
-            // Redirect back with error message
             return redirect()
                 ->back()
                 ->withInput()
                 ->with('error', 'Failed to update post. Please try again.');
         }
-
     }
 
     public function destroy(Post $post)

@@ -1,0 +1,8 @@
+{
+  "allowedCommands": [
+    "composer test",
+    "php artisan test",
+    "git commit -m \"<message>\"",
+    "git add ."
+  ]
+}
