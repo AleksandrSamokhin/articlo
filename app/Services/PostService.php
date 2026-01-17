@@ -10,10 +10,6 @@ class PostService
 {
     /**
      * Prepare post data for creation.
-     *
-     * @param  array  $validatedData
-     * @param  int  $userId
-     * @return array
      */
     public function preparePostData(array $validatedData, int $userId): array
     {
@@ -28,10 +24,6 @@ class PostService
 
     /**
      * Prepare post data for update.
-     *
-     * @param  array  $validatedData
-     * @param  Post  $post
-     * @return array
      */
     public function preparePostDataForUpdate(array $validatedData, Post $post): array
     {
@@ -49,11 +41,6 @@ class PostService
 
     /**
      * Handle temporary file upload and attach to post.
-     *
-     * @param  Post  $post
-     * @param  string|null  $imageFolder
-     * @param  bool  $clearExisting
-     * @return void
      */
     public function handleTemporaryFileUpload(Post $post, ?string $imageFolder, bool $clearExisting = false): void
     {
@@ -81,9 +68,6 @@ class PostService
 
     /**
      * Check if a temporary file exists for the given folder.
-     *
-     * @param  string|null  $folder
-     * @return bool
      */
     public function hasTemporaryFile(?string $folder): bool
     {

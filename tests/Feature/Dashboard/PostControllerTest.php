@@ -8,14 +8,13 @@ use App\Models\TemporaryFile;
 use App\Models\User;
 use App\Services\PostService;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Helper function to create a minimal valid JPEG image for testing
  */
 function createTestImage(string $path, string $filename): string
 {
-    if (!file_exists($path)) {
+    if (! file_exists($path)) {
         mkdir($path, 0755, true);
     }
 

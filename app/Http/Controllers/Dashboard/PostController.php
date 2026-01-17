@@ -64,7 +64,7 @@ class PostController extends Controller
         if (auth()->user()->cannot('update', $post)) {
             abort(403);
         }
-        
+
         try {
             $validatedData = $request->validated();
             $categories = $validatedData['categories'] ?? [];
