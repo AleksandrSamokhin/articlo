@@ -7,6 +7,7 @@ use App\Models\PostLike;
 use App\Models\TemporaryFile;
 use App\Models\User;
 use App\Services\PostService;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -29,12 +30,29 @@ function createTestImage(string $path, string $filename): string
     return $fullPath;
 }
 
+/**
+ * Clean up orphan temporary folders after each test
+ */
+afterEach(function () {
+    $tmpBasePath = storage_path('app/public/posts/tmp');
+    if (File::exists($tmpBasePath)) {
+        $folders = File::directories($tmpBasePath);
+        foreach ($folders as $folder) {
+            $folderName = basename($folder);
+            // Only delete test folders (those with test prefixes)
+            if (preg_match('/^(test-|first-|second-|existing-|delete-test-)/', $folderName)) {
+                File::deleteDirectory($folder);
+            }
+        }
+    }
+});
+
 // ============================================
 // Store Method Tests
 // ============================================
 
-test('admin_can_create_post_successfully', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
+test('authenticated_user_can_create_post_successfully', function () {
+    $user = User::factory()->create();
     $categories = Category::factory()->count(2)->create();
 
     $postData = [
@@ -43,7 +61,7 @@ test('admin_can_create_post_successfully', function () {
         'categories' => $categories->pluck('id')->toArray(),
     ];
 
-    $response = $this->actingAs($admin)
+    $response = $this->actingAs($user)
         ->post(route('dashboard.posts.store'), $postData);
 
     $response
@@ -54,12 +72,12 @@ test('admin_can_create_post_successfully', function () {
     $this->assertDatabaseHas('posts', [
         'title' => 'Test Post Title',
         'content' => 'Test post content here.',
-        'user_id' => $admin->id,
+        'user_id' => $user->id,
     ]);
 });
 
 test('post_creation_syncs_categories_correctly', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
     $categories = Category::factory()->count(3)->create();
 
     $postData = [
@@ -68,7 +86,7 @@ test('post_creation_syncs_categories_correctly', function () {
         'categories' => $categories->pluck('id')->toArray(),
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->post(route('dashboard.posts.store'), $postData);
 
     $post = Post::where('title', 'Test Post with Categories')->first();
@@ -79,9 +97,7 @@ test('post_creation_syncs_categories_correctly', function () {
 });
 
 test('post_creation_handles_temporary_file_upload', function () {
-    Mail::fake();
-
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
     $category = Category::factory()->create();
 
     // Create temporary file in actual filesystem
@@ -99,7 +115,7 @@ test('post_creation_handles_temporary_file_upload', function () {
         'image' => $folder,
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->post(route('dashboard.posts.store'), $postData);
 
     $post = Post::where('title', 'Post with Image')->first();
@@ -115,7 +131,7 @@ test('post_creation_handles_temporary_file_upload', function () {
 test('post_creation_queues_email_notification', function () {
     Mail::fake();
 
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
     $category = Category::factory()->create();
 
     $postData = [
@@ -124,18 +140,18 @@ test('post_creation_queues_email_notification', function () {
         'categories' => [$category->id],
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->post(route('dashboard.posts.store'), $postData);
 
     $post = Post::where('title', 'Test Post')->first();
 
-    Mail::assertQueued(PostCreated::class, function ($mail) use ($post, $admin) {
-        return $mail->post->id === $post->id && $mail->hasTo($admin->email);
+    Mail::assertQueued(PostCreated::class, function ($mail) use ($post, $user) {
+        return $mail->post->id === $post->id && $mail->hasTo($user->email);
     });
 });
 
 test('post_creation_generates_unique_slug', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
     $category = Category::factory()->create();
 
     $postData = [
@@ -145,12 +161,12 @@ test('post_creation_generates_unique_slug', function () {
     ];
 
     // Create first post
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->post(route('dashboard.posts.store'), $postData);
 
     // Create second post with same title
     $postData['content'] = 'Second post content.';
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->post(route('dashboard.posts.store'), $postData);
 
     $posts = Post::where('title', 'Same Title')->get();
@@ -175,9 +191,9 @@ test('guest_cannot_create_post', function () {
 });
 
 test('post_creation_validates_required_fields', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
 
-    $response = $this->actingAs($admin)
+    $response = $this->actingAs($user)
         ->post(route('dashboard.posts.store'), []);
 
     $response->assertSessionHasErrors(['title', 'content', 'categories']);
@@ -187,9 +203,9 @@ test('post_creation_validates_required_fields', function () {
 // Update Method Tests
 // ============================================
 
-test('admin_can_update_own_post', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
+test('authenticated_user_can_update_own_post', function () {
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
     $category = Category::factory()->create();
 
     $updateData = [
@@ -198,7 +214,7 @@ test('admin_can_update_own_post', function () {
         'categories' => [$category->id],
     ];
 
-    $response = $this->actingAs($admin)
+    $response = $this->actingAs($user)
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
     $response
@@ -213,8 +229,8 @@ test('admin_can_update_own_post', function () {
 });
 
 test('post_update_regenerates_slug_when_title_changes', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create(['title' => 'Original Title']);
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create(['title' => 'Original Title']);
     $category = Category::factory()->create();
 
     $originalSlug = $post->slug;
@@ -225,7 +241,7 @@ test('post_update_regenerates_slug_when_title_changes', function () {
         'categories' => [$category->id],
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
     $post->refresh();
@@ -235,8 +251,8 @@ test('post_update_regenerates_slug_when_title_changes', function () {
 });
 
 test('post_update_keeps_slug_when_title_unchanged', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
     $category = Category::factory()->create();
 
     $originalSlug = $post->slug;
@@ -247,7 +263,7 @@ test('post_update_keeps_slug_when_title_unchanged', function () {
         'categories' => [$category->id],
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
     $post->refresh();
@@ -256,8 +272,8 @@ test('post_update_keeps_slug_when_title_unchanged', function () {
 });
 
 test('post_update_syncs_categories', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
 
     $oldCategories = Category::factory()->count(2)->create();
     $post->categories()->sync($oldCategories->pluck('id'));
@@ -270,7 +286,7 @@ test('post_update_syncs_categories', function () {
         'categories' => $newCategories->pluck('id')->toArray(),
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
     $post->refresh();
@@ -281,14 +297,12 @@ test('post_update_syncs_categories', function () {
 });
 
 test('post_update_replaces_image_with_clear_existing', function () {
-    Mail::fake();
-
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
     $category = Category::factory()->create();
 
     // Create post directly without factory to avoid media hooks
     $post = Post::create([
-        'user_id' => $admin->id,
+        'user_id' => $user->id,
         'title' => 'Test Post',
         'slug' => 'test-post',
         'content' => 'Test content',
@@ -323,7 +337,7 @@ test('post_update_replaces_image_with_clear_existing', function () {
         'image' => $folder2,
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
     $post->refresh();
@@ -332,10 +346,10 @@ test('post_update_replaces_image_with_clear_existing', function () {
     expect($post->getMedia('posts'))->toHaveCount(1);
 });
 
-test('admin_cannot_update_other_users_post', function () {
-    $admin1 = User::factory()->create(['is_admin' => true]);
-    $admin2 = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin1)->create();
+test('user_cannot_update_other_users_post', function () {
+    $user1 = User::factory()->create();
+    $user2 = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user1)->create();
     $category = Category::factory()->create();
 
     $updateData = [
@@ -344,33 +358,15 @@ test('admin_cannot_update_other_users_post', function () {
         'categories' => [$category->id],
     ];
 
-    $response = $this->actingAs($admin2)
-        ->patch(route('dashboard.posts.update', $post), $updateData);
-
-    $response->assertStatus(403);
-});
-
-test('regular_user_cannot_access_update_endpoint', function () {
-    $user = User::factory()->create(['is_admin' => false]);
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
-    $category = Category::factory()->create();
-
-    $updateData = [
-        'title' => 'Updated Title',
-        'content' => 'Updated content.',
-        'categories' => [$category->id],
-    ];
-
-    $response = $this->actingAs($user)
+    $response = $this->actingAs($user2)
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
     $response->assertStatus(403);
 });
 
 test('post_update_handles_exception_gracefully', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
     $category = Category::factory()->create();
 
     // Mock PostService to throw exception
@@ -387,7 +383,7 @@ test('post_update_handles_exception_gracefully', function () {
         'categories' => [$category->id],
     ];
 
-    $response = $this->actingAs($admin)
+    $response = $this->actingAs($user)
         ->from(route('dashboard.posts.edit', $post))
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
@@ -398,14 +394,12 @@ test('post_update_handles_exception_gracefully', function () {
 });
 
 test('post_update_without_image_keeps_existing', function () {
-    Mail::fake();
-
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
     $category = Category::factory()->create();
 
     // Create post directly without factory to avoid media hooks
     $post = Post::create([
-        'user_id' => $admin->id,
+        'user_id' => $user->id,
         'title' => 'Test Post',
         'slug' => 'test-post-'.uniqid(),
         'content' => 'Test content',
@@ -432,7 +426,7 @@ test('post_update_without_image_keeps_existing', function () {
         'categories' => [$category->id],
     ];
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->patch(route('dashboard.posts.update', $post), $updateData);
 
     $post->refresh();
@@ -445,11 +439,11 @@ test('post_update_without_image_keeps_existing', function () {
 // Destroy Method Tests
 // ============================================
 
-test('admin_can_delete_own_post', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
+test('authenticated_user_can_delete_own_post', function () {
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
 
-    $response = $this->actingAs($admin)
+    $response = $this->actingAs($user)
         ->delete(route('dashboard.posts.destroy', $post));
 
     $response
@@ -460,15 +454,15 @@ test('admin_can_delete_own_post', function () {
 });
 
 test('post_deletion_cascades_to_categories_pivot', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
     $categories = Category::factory()->count(3)->create();
 
     $post->categories()->sync($categories->pluck('id'));
 
     $this->assertDatabaseHas('category_post', ['post_id' => $post->id]);
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->delete(route('dashboard.posts.destroy', $post));
 
     // Pivot records should be deleted
@@ -481,21 +475,21 @@ test('post_deletion_cascades_to_categories_pivot', function () {
 });
 
 test('post_deletion_cascades_to_likes', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
-    $users = User::factory()->count(3)->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
+    $otherUsers = User::factory()->count(3)->create();
 
     // Create likes for the post
-    foreach ($users as $user) {
+    foreach ($otherUsers as $otherUser) {
         PostLike::create([
             'post_id' => $post->id,
-            'user_id' => $user->id,
+            'user_id' => $otherUser->id,
         ]);
     }
 
     $this->assertDatabaseHas('post_likes', ['post_id' => $post->id]);
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->delete(route('dashboard.posts.destroy', $post));
 
     // Likes should be deleted
@@ -503,13 +497,11 @@ test('post_deletion_cascades_to_likes', function () {
 });
 
 test('post_deletion_removes_media_files', function () {
-    Mail::fake();
-
-    $admin = User::factory()->create(['is_admin' => true]);
+    $user = User::factory()->create();
 
     // Create post directly without factory to avoid media hooks
     $post = Post::create([
-        'user_id' => $admin->id,
+        'user_id' => $user->id,
         'title' => 'Test Post',
         'slug' => 'test-post-'.uniqid(),
         'content' => 'Test content',
@@ -529,33 +521,19 @@ test('post_deletion_removes_media_files', function () {
     $post->refresh();
     expect($post->getMedia('posts'))->toHaveCount(1);
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
         ->delete(route('dashboard.posts.destroy', $post));
 
     // Media records should be deleted
     $this->assertDatabaseMissing('media', ['model_id' => $post->id, 'model_type' => Post::class]);
 });
 
-test('admin_cannot_delete_other_users_post', function () {
-    $admin1 = User::factory()->create(['is_admin' => true]);
-    $admin2 = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin1)->create();
+test('user_cannot_delete_other_users_post', function () {
+    $user1 = User::factory()->create();
+    $user2 = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user1)->create();
 
-    $response = $this->actingAs($admin2)
-        ->delete(route('dashboard.posts.destroy', $post));
-
-    $response->assertStatus(403);
-
-    // Post should still exist
-    $this->assertNotNull($post->fresh());
-});
-
-test('regular_user_cannot_delete_any_post', function () {
-    $user = User::factory()->create(['is_admin' => false]);
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
-
-    $response = $this->actingAs($user)
+    $response = $this->actingAs($user2)
         ->delete(route('dashboard.posts.destroy', $post));
 
     $response->assertStatus(403);
@@ -565,8 +543,8 @@ test('regular_user_cannot_delete_any_post', function () {
 });
 
 test('guest_cannot_delete_post', function () {
-    $admin = User::factory()->create(['is_admin' => true]);
-    $post = Post::factory()->withoutImage()->for($admin)->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->withoutImage()->for($user)->create();
 
     $response = $this->delete(route('dashboard.posts.destroy', $post));
 
