@@ -61,9 +61,7 @@ class PostController extends Controller
      */
     public function update(StorePostRequest $request, Post $post, PostService $postService)
     {
-        if (auth()->user()->cannot('update', $post)) {
-            abort(403);
-        }
+        abort_if(auth()->user()->cannot('update', $post), 403);
 
         try {
             $validatedData = $request->validated();
@@ -94,9 +92,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         // Check if the user is authorized to delete the post
-        if (auth()->user()->cannot('delete', $post)) {
-            abort(403);
-        }
+        abort_if(auth()->user()->cannot('delete', $post), 403);
 
         $post->delete();
 

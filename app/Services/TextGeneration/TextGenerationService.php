@@ -10,9 +10,7 @@ class TextGenerationService
 {
     public function getContent(string $provider, string $title): string
     {
-        if (! Auth::check()) {
-            throw new Exception('Unauthorized access to content generation.');
-        }
+        throw_unless(Auth::check(), new Exception('Unauthorized access to content generation.'));
 
         return match ($provider) {
             TextGenerationProviders::OPENAI->value => (new OpenAi)->getContent($title),

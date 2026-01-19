@@ -54,7 +54,8 @@ class Post extends Model implements HasMedia
     /**
      * Scope a query to filter by category when provided.
      */
-    public function scopeByCategory(Builder $query): Builder
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function byCategory(Builder $query): Builder
     {
         return $query->when(request('category_id'), function ($query) {
             $query->whereHas('categories', function ($q) {
@@ -66,7 +67,8 @@ class Post extends Model implements HasMedia
     /**
      * Scope a query to filter posts from users that a given user follows.
      */
-    public function scopeFromFollowedUsers(Builder $query, int $userId): Builder
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function fromFollowedUsers(Builder $query, int $userId): Builder
     {
         return $query->whereIn('user_id', function ($subQuery) use ($userId) {
             $subQuery->select('following_id')
@@ -75,7 +77,8 @@ class Post extends Model implements HasMedia
         });
     }
 
-    public function scopeWithLikes(Builder $query): Builder
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function withLikes(Builder $query): Builder
     {
         return $query->withCount('likes');
     }

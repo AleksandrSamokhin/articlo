@@ -9,10 +9,8 @@ it('allows only administrator users to access dashboard page', function () {
     $admin = User::factory()->create(['is_admin' => true]);
 
     actingAs($user)
-        ->get('/dashboard')
-        ->assertStatus(403);
+        ->get('/dashboard')->assertForbidden();
 
     actingAs($admin)
-        ->get('/dashboard')
-        ->assertStatus(200);
+        ->get('/dashboard')->assertOk();
 });

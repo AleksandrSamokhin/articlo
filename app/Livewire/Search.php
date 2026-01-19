@@ -24,13 +24,11 @@ class Search extends Component
     #[Computed]
     public function results()
     {
-        $results = [];
-
         if (strlen($this->search) > 0) {
-            $results = Post::search($this->search)->paginate(10);
+            return Post::search($this->search)->paginate(10);
         }
 
-        return $results;
+        return [];
     }
 
     public function render()
