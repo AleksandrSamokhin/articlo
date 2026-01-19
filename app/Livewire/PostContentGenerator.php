@@ -2,17 +2,18 @@
 
 namespace App\Livewire;
 
-use App\Services\TextGeneration\TextGenerationService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Facades\Prism;
 
 class PostContentGenerator extends Component
 {
-    public $title = '';
+    public string $title = '';
 
-    public $content = '';
+    public string $content = '';
 
-    public $error = '';
+    public string $error = '';
 
     public function mount()
     {
@@ -21,7 +22,7 @@ class PostContentGenerator extends Component
         }
     }
 
-    public function generateContent(TextGenerationService $textGenerationService)
+    public function generateContent()
     {
         if (! Auth::check()) {
             $this->error = 'You must be logged in to generate content.';
@@ -42,9 +43,28 @@ class PostContentGenerator extends Component
         }
 
         try {
-            $this->content = $textGenerationService->getContent('openai', $this->title);
+            // OpenAI
+            // $response = Prism::text()
+            //     ->using(Provider::OpenAI, 'gpt-4o-mini')
+            //     ->withPrompt(view('prompts.post-content', ['title' => $this->title])->render())
+            //     ->asText();
+
+            // $this->content = $response->text;
+
+            // Anthropic
+            $response = Prism::text()
+                ->using(Provider::Anthropic, 'claude-haiku-4-5-20251001')
+                ->withPrompt(view('prompts.post-content', ['title' => $this->title])->render())
+                ->asText();
+
+            $this->content = $response->text;
+
+            info('Content generated', [
+                'prompt_tokens' => $response->usage->promptTokens,
+                'completion_tokens' => $response->usage->completionTokens,
+            ]);
         } catch (\Exception $e) {
-            \Log::error('Livewire AI content generation error: '.$e->getMessage());
+            \Log::error('AI content generation error: '.$e->getMessage());
             $this->error = 'Failed to generate content. Please try again.';
         }
     }
