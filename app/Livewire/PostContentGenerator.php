@@ -52,8 +52,9 @@ class PostContentGenerator extends Component
             // $this->content = $response->text;
 
             // Anthropic
+            // for testing use claude-haiku-20251001
             $response = Prism::text()
-                ->using(Provider::Anthropic, 'claude-haiku-4-5-20251001')
+                ->using(Provider::Anthropic, 'claude-sonnet-4-5-20250929')
                 ->withPrompt(view('prompts.post-content', ['title' => $this->title])->render())
                 ->asText();
 
