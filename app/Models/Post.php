@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasPostLikes;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,7 +55,7 @@ class Post extends Model implements HasMedia
     /**
      * Scope a query to filter by category when provided.
      */
-    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    #[Scope]
     protected function byCategory(Builder $query): Builder
     {
         return $query->when(request('category_id'), function ($query) {
@@ -67,7 +68,7 @@ class Post extends Model implements HasMedia
     /**
      * Scope a query to filter posts from users that a given user follows.
      */
-    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    #[Scope]
     protected function fromFollowedUsers(Builder $query, int $userId): Builder
     {
         return $query->whereIn('user_id', function ($subQuery) use ($userId) {
@@ -77,7 +78,7 @@ class Post extends Model implements HasMedia
         });
     }
 
-    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    #[Scope]
     protected function withLikes(Builder $query): Builder
     {
         return $query->withCount('likes');

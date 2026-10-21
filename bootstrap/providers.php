@@ -1,7 +1,11 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\HorizonServiceProvider;
+use Usamamuneerchaudhary\Commentify\Providers\CommentifyServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\HorizonServiceProvider::class,
-    Usamamuneerchaudhary\Commentify\Providers\CommentifyServiceProvider::class,
+    AppServiceProvider::class,
+    HorizonServiceProvider::class,
+    CommentifyServiceProvider::class,
 ];

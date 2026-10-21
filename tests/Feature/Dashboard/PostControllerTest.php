@@ -372,7 +372,7 @@ test('post_update_handles_exception_gracefully', function () {
     // Mock PostService to throw exception
     $this->mock(PostService::class, function ($mock) {
         $mock->shouldReceive('handleTemporaryFileUpload')
-            ->andThrow(new \Exception('Upload failed'));
+            ->andThrow(new Exception('Upload failed'));
         $mock->shouldReceive('preparePostDataForUpdate')
             ->andReturn([]);
     });

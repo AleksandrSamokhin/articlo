@@ -3,6 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Post;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Livewire\Component;
 
 class PostLike extends Component
@@ -42,7 +45,7 @@ class PostLike extends Component
     }
 
     public function render(
-    ): \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application|null {
+    ): Factory|Application|View|\Illuminate\Contracts\Foundation\Application|null {
         return view('livewire.post-like');
     }
 }
